@@ -17,7 +17,7 @@ public class WorldController : MonoBehaviour {
 	public Sprite[] TileSheet;
 	public ReferenceObject[] ObjectSheet;
 
-	public static int WORLD_WIDTH { get { return 64; } }
+	public static int WORLD_WIDTH { get { return 128; } }
 	public static int WORLD_HEIGHT { get { return 32; } }
 	public static float BLOCK_SIZE { get { return 2.0f; } }
 
@@ -85,10 +85,20 @@ public class WorldController : MonoBehaviour {
 				SpawnBlock(BlockID.BrickFloor, fortX + x, fortY - 1);
 			}
 
+			//Starting items
 			Place(BlockID.VillageDoor, fortX, fortY);
 			Place(BlockID.Chest, fortX - 1, fortY);
 			Place(BlockID.Anvil, fortX - 3, fortY);
 			Place(BlockID.QuestBoard, fortX + 2, fortY);
+
+			//Create line of trees
+			for (int i = 0; i<6; ++i)
+			{
+				int x0 = fortX - fortRadius - 4 - 6 * i;
+				int x1 = fortX + fortRadius + 4 + 6 * i;
+				Place(BlockID.Tree, x0, FindHeight(x0));
+				Place(BlockID.Tree, x1, FindHeight(x1));
+			}
 		}
 
 
