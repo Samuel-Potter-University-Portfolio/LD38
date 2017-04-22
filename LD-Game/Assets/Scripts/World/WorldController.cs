@@ -25,6 +25,8 @@ public class WorldController : MonoBehaviour {
 	void Start ()
 	{
 		Main = this;
+		Block.LibInit(this);
+
 		Blocks = new Block[WORLD_WIDTH, WORLD_HEIGHT];
 		GenerateWorld();
 		SpawnPerson(true);

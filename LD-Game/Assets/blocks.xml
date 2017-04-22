@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Blocks>
+<Dirt ID="0" Solid="true" Destructable="true" FlipX="True" FlipY="True"/>
+<Stone ID="1" Solid="true" Destructable="true" FlipX="True" FlipY="False"/>
+<Grass ID="2" Solid="true" Destructable="true" FlipX="True" FlipY="False"/>
+</Blocks>

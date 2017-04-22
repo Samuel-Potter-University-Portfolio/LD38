@@ -3,6 +3,8 @@ Block properties (xml)
 	-Destructable (Tool required)
 	-Solid/Walkable(Up/Down (Ladder))
 	-Reference block (Irregular holder e.g. crafting station, house)	
+	-Random rot (x,y)
+	-Dropped item (amount)
 
 Meters:
 	-Hunger
