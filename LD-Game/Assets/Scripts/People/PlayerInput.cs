@@ -2,16 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using UnityEngine.UI;
+
 [RequireComponent(typeof(Person))]
 public class PlayerInput : MonoBehaviour {
 
 
 	private Person mPerson;
-	
+
+	[SerializeField]
+	private RectTransform[] ResourceBars;
+
 	void Start ()
 	{
 		mPerson = GetComponent<Person>();
-    }
+
+		mPerson.HungerBar.SetAnimBar(ResourceBars[0]);
+		mPerson.ThirstBar.SetAnimBar(ResourceBars[1]);
+		mPerson.StaminaBar.SetAnimBar(ResourceBars[2]);
+		mPerson.HealthBar.SetAnimBar(ResourceBars[3]);
+	}
 	
 	void Update ()
 	{

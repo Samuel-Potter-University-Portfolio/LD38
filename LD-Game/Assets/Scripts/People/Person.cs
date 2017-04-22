@@ -5,6 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Person : MonoBehaviour {
 
+	//Movement
 	public float Acceleration = 20.0f;
 	public float Decceleration = 20.0f;
 	public float MaxSpeed = 20.0f;
@@ -19,6 +20,11 @@ public class Person : MonoBehaviour {
 	public bool TouchingGround { get; private set; }
 	public bool InJump { get; private set; }
 
+	//Resourses
+	public ResourceBar HungerBar;
+	public ResourceBar ThirstBar;
+	public ResourceBar StaminaBar;
+	public ResourceBar HealthBar;
 
 	void Start ()
 	{
@@ -32,7 +38,12 @@ public class Person : MonoBehaviour {
 		aiInput.enabled = !IsPlayer;
 
 		Body = GetComponent<Rigidbody2D>();
-    }
+
+		HungerBar = new ResourceBar(0, 100, 3);
+		ThirstBar = new ResourceBar(0, 100, 2);
+		StaminaBar = new ResourceBar(0, 100, 1);
+		HealthBar = new ResourceBar(0, 100, 0);
+	}
 
 	public void AddInput(Vector2 input)
 	{
@@ -42,6 +53,12 @@ public class Person : MonoBehaviour {
 	void Update()
 	{
 		UpdateMovement();
+
+		float deltaTime = Time.deltaTime;
+		HungerBar.Update(deltaTime);
+		ThirstBar.Update(deltaTime);
+		StaminaBar.Update(deltaTime);
+		HealthBar.Update(deltaTime);
 	}
 	
 	void UpdateMovement()

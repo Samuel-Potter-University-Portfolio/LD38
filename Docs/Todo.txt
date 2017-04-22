@@ -1,5 +1,5 @@
 
-Block properties (xml)
+Block properties (xml)**DONE**
 	-Destructable (Tool required)
 	-Solid/Walkable(Up/Down (Ladder))
 	-Reference block (Irregular holder e.g. crafting station, house)	
@@ -30,3 +30,10 @@ Items:
 
 Day and night
 Seasons
+
+
+
+
+	<Dirt ID=0 Solid=1 Destructable=1 Tool=1 DroppedItem=0 DroppedAmount=0/>
+	<Stone ID=1 Solid=1 Destructable=1 Tool=1 DroppedItem=0 DroppedAmount=0/>
+	<Grass ID=2 Solid=1 Destructable=1 Tool=1 DroppedItem=0 DroppedAmount=0/>
