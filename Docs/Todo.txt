@@ -1,0 +1,30 @@
+
+Block properties (xml)
+	-Destructable (Tool required)
+	-Solid/Walkable(Up/Down (Ladder))
+	-Reference block (Irregular holder e.g. crafting station, house)	
+
+Meters:
+	-Hunger
+	-Thirst
+	-Health
+	-Stamina
+
+Stations:
+	-Basic Shelter (Upgrade)
+		->Wooden Shack
+		->Stone Fort
+		->City
+	-Crafting Station
+	-Furnace
+	-Anvil
+Items:
+	-Hot bar
+	-Basic Inventory (Shelter acts as chest)
+	-Crafting UI for cs,f,a
+	
+	
+	
+
+Day and night
+Seasons

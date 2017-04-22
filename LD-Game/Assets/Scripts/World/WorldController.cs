@@ -15,7 +15,7 @@ public class WorldController : MonoBehaviour {
 	public Sprite[] TileSheet;
 
 	public static uint WORLD_WIDTH { get { return 128; } }
-	public static uint WORLD_HEIGHT { get { return 16; } }
+	public static uint WORLD_HEIGHT { get { return 64; } }
 	public static float BLOCK_SIZE { get { return 2.0f; } }
 
 	public Block[,] Blocks;
@@ -32,21 +32,32 @@ public class WorldController : MonoBehaviour {
 
 	void GenerateWorld()
 	{
-		for (uint x = 0; x < WORLD_WIDTH; ++x)
-			for (uint y = 0; y < WORLD_HEIGHT - 8; ++y)
-			{
-				BlockID id = y <= 4 ? BlockID.Stone : BlockID.Dirt;
-				SpawnBlock(id, x, y);
-			}
+		const float bumps = 5.0f;
+		const float height = 5.0f;
+		const float start_height = 20.0f;
 
+		//Sin wave
 		for (uint x = 0; x < WORLD_WIDTH; ++x)
 		{
-			SpawnBlock(x % 16 == 0 ? BlockID.Dirt : BlockID.Grass, x, 8);
+			float v = (float)x / (float)WORLD_WIDTH;
+			float normalized_height = Mathf.Sin(v * Mathf.PI * 2.0f * bumps) * 0.5f + 0.5f;
+			int current_height = Mathf.FloorToInt(start_height + normalized_height * height);
 
-			if (x % 16 == 0)
-				SpawnBlock(BlockID.Grass, x, 9);
+			if (current_height >= WORLD_HEIGHT - 1)
+				current_height = (int)WORLD_HEIGHT - 1;
 
-		}
+			for (uint y = 0; y <= current_height; ++y)
+			{
+				if (y == current_height)
+					SpawnBlock(BlockID.Grass, x, y);
+				else if (y >= current_height - 4.0f)
+					SpawnBlock(BlockID.Dirt, x, y);
+				else
+					SpawnBlock(BlockID.Stone, x, y);
+
+			}
+
+        }
 
 		WorldInit = true;
 
