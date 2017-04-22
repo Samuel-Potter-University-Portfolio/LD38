@@ -14,7 +14,7 @@ public class PlayerInput : MonoBehaviour {
 	private RectTransform[] ResourceBars;
 
 	public float InteractRange = 6.0f;
-
+	private ItemSlot CurrentlySelected;
 
 	void Start ()
 	{
@@ -30,6 +30,15 @@ public class PlayerInput : MonoBehaviour {
 	void Update ()
 	{
 		UpdateMovement();
+
+		//Place item
+		if (Input.GetKeyDown(KeyCode.E) && CurrentlySelected != null && CurrentlySelected.mMeta.PlacesBlock != BlockID.None)
+		{
+			WorldController.Main.Place(CurrentlySelected.mMeta.PlacesBlock, Mathf.RoundToInt(transform.position.x / WorldController.BLOCK_SIZE), Mathf.RoundToInt(transform.position.y / WorldController.BLOCK_SIZE));
+
+			CurrentlySelected.SetID(ItemID.None);
+			HotbarSelected(null);
+        }
     }
 
 	void UpdateMovement()
@@ -43,4 +52,15 @@ public class PlayerInput : MonoBehaviour {
 			mPerson.AddInput(Vector2.up);
 
 	}
+
+	public void HotbarSelected(ItemSlot slot)
+	{
+		if(slot == null || slot.ID == ItemID.None)
+			CurrentlySelected = null;
+		else
+			CurrentlySelected = slot;
+
+		foreach (ItemSlot hotbarSlot in mPerson.HotBar)
+			hotbarSlot.UpdateColour(CurrentlySelected == null || CurrentlySelected.ID == ItemID.None ? false : hotbarSlot == CurrentlySelected);
+    }
 }

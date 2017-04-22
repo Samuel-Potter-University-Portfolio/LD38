@@ -2,4 +2,7 @@
 <Items>
 <Stick ID="1" TextureID="0" Tool="False"/>
 <Log ID="2" TextureID="1" Tool="False"/>
+<Pickaxe ID="3" TextureID="2" Tool="True"/>
+<Rock ID="4" TextureID="3" Tool="False"/>
+<BasicShelter ID="5" TextureID="4" Tool="False" PlacesBlock="5"/>
 </Items>

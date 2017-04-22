@@ -17,6 +17,7 @@ public struct ItemMeta
 {
 	public int TextureID;
 	public bool Tool;
+	public BlockID PlacesBlock;
 }
 
 public class ItemController : MonoBehaviour
@@ -41,12 +42,13 @@ public class ItemController : MonoBehaviour
 
 		foreach (XmlNode node in itemsDoc.DocumentElement.ChildNodes)
 		{
-			ItemID id = (ItemID)XML.GetInt(node.Attributes["ID"]);
+			ItemID id = (ItemID)XML.GetUInt(node.Attributes["ID"]);
 
 			ItemMeta meta = new ItemMeta();
 
 			meta.TextureID = XML.GetInt(node.Attributes["TextureID"], -1);
 			meta.Tool = XML.GetBool(node.Attributes["Tool"]);
+			meta.PlacesBlock = (BlockID)XML.GetUInt(node.Attributes["PlacesBlock"]);
 
 			Library[id] = meta;
 		}

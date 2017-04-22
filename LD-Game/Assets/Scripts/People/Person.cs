@@ -45,9 +45,9 @@ public class Person : MonoBehaviour
 
 		Body = GetComponent<Rigidbody2D>();
 
-		HungerBar = new ResourceBar(0, 100, 3);
-		ThirstBar = new ResourceBar(0, 100, 2);
-		StaminaBar = new ResourceBar(0, 100, 1);
+		HungerBar = new ResourceBar(0, 100, 0.3f);
+		ThirstBar = new ResourceBar(0, 100, 0.1f);
+		StaminaBar = new ResourceBar(0, 100, 0.04f);
 		HealthBar = new ResourceBar(0, 100, 0);
 	}
 
@@ -128,18 +128,15 @@ public class Person : MonoBehaviour
 
 	public bool GiveItem(ItemID ID)
 	{
-		Debug.Log(ID);
 		foreach (ItemSlot slot in HotBar)
 		{
 			if (slot.ID == ItemID.None)
 			{
 				slot.SetID(ID);
-				Debug.Log("Gif");
 				return true;
 			}
 		}
-
-		Debug.Log("Non");
+		
 		return false;
 	}
 }

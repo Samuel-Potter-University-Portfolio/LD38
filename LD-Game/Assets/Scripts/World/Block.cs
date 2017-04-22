@@ -11,7 +11,8 @@ public enum BlockID
 	Dirt,
 	Stone,
 	Grass,
-	Tree
+	Tree,
+	BasicShelter
 }
 
 

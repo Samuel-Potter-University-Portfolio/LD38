@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Blocks>
-<Dirt ID="1" TextureID="0" Solid="true" Destructable="true" FlipX="True" FlipY="True" DroppedItem="1"/>
+<Dirt ID="1" TextureID="0" Solid="true" Destructable="true" FlipX="True" FlipY="True" DroppedItem="5"/>
 <Stone ID="2" TextureID="1" Solid="true" Destructable="true" FlipX="True" FlipY="False"/>
 <Grass ID="3" TextureID="2" Solid="true" Destructable="true" FlipX="True" FlipY="False"/>
-<Tree ID="4" ObjectID="0" Solid="false" Destructable="true" FlipX="True" FlipY="False" />
+<Tree ID="4" ObjectID="0" Solid="false" Destructable="true"/>
+<BasicShelter ID="5" ObjectID="1" Solid="false" Destructable="false"/>
 </Blocks>

@@ -8,13 +8,19 @@ using UnityEngine.UI;
 public class ItemSlot : MonoBehaviour {
 
 	public ItemID ID;
+	public ItemMeta mMeta;
+	public bool IsHotbar = false;
 	[SerializeField]
 	private Image ItemImage;
-	
+	private RawImage BackgroundImage;
+
+	private Color DefaultColour;
 
 	void Start()
 	{
-		SetID(ID);
+		BackgroundImage = GetComponent<RawImage>();
+		DefaultColour = BackgroundImage.color;
+        SetID(ID);
 	}
 
 	public void SetID(ItemID ID)
@@ -27,7 +33,8 @@ public class ItemSlot : MonoBehaviour {
 			return;
 		}
 
-		int textureID = ItemController.Library[ID].TextureID;
+		mMeta = ItemController.Library[ID];
+        int textureID = mMeta.TextureID;
 
 		if (textureID == -1)
 			ItemImage.enabled = false;
@@ -36,6 +43,21 @@ public class ItemSlot : MonoBehaviour {
 			ItemImage.sprite = ItemController.Main.ItemSheet[textureID];
 			ItemImage.enabled = true;
 		}
+	}
 
+	public void OnPressed()
+	{
+		if (IsHotbar)
+		{ 
+			PlayerInput.Main.HotbarSelected(this);
+        }
+	}
+
+	public void UpdateColour(bool selected)
+	{
+		if (selected)
+			BackgroundImage.color = Color.white;
+		else
+			BackgroundImage.color = DefaultColour;
 	}
 }

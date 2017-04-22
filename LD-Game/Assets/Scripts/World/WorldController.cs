@@ -62,7 +62,8 @@ public class WorldController : MonoBehaviour {
 
         }
 
-		SpawnRaw(BlockID.Tree, WORLD_WIDTH / 2, 10);
+		Place(BlockID.Tree, WORLD_WIDTH / 2, 10);
+		Place(BlockID.BasicShelter, WORLD_WIDTH / 2, 18);
 
 		WorldInit = true;
 
@@ -72,7 +73,7 @@ public class WorldController : MonoBehaviour {
 					Blocks[x, y].WorldInit(this);
 	}
 
-	public void SpawnRaw(BlockID id, int x, int y)
+	public void Place(BlockID id, int x, int y)
 	{
 		if (!Block.Library[id].IsRefBlock)
 			SpawnBlock(id, x, y);

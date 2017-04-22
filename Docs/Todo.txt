@@ -32,8 +32,3 @@ Day and night
 Seasons
 
 
-
-
-	<Dirt ID=0 Solid=1 Destructable=1 Tool=1 DroppedItem=0 DroppedAmount=0/>
-	<Stone ID=1 Solid=1 Destructable=1 Tool=1 DroppedItem=0 DroppedAmount=0/>
-	<Grass ID=2 Solid=1 Destructable=1 Tool=1 DroppedItem=0 DroppedAmount=0/>
