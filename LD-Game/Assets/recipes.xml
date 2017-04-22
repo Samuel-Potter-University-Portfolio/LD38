@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Recipes>
+<Stick ID="1" Duration="10">
+	<Req ID="2" Amount="2"/>
+</Stick>
+</Recipes>

@@ -47,7 +47,25 @@ public class ItemSlot : MonoBehaviour {
 
 	public void OnPressed()
 	{
-		if (IsHotbar)
+		if (ChestOverlay.IsOpen)
+		{
+			if (ID == ItemID.None)
+				return;
+
+			//Move into chest
+			if (IsHotbar)
+			{
+				if (PlayerInput.Main.mChestOverlay.GiveItem(ID))
+					SetID(ItemID.None);
+			}
+			//Move into hotbar
+			else
+			{
+				if (PlayerInput.Main.mPerson.GiveItem(ID))
+					SetID(ItemID.None);
+			}
+		}
+		else if (IsHotbar)
 		{ 
 			PlayerInput.Main.HotbarSelected(this);
         }

@@ -15,9 +15,11 @@ public class PlayerInput : MonoBehaviour {
 
 	[SerializeField]
 	private RectTransform[] ResourceBars;
-
+	
 	public float InteractRange = 6.0f;
 	private ItemSlot CurrentlySelected;
+
+	public ChestOverlay mChestOverlay;
 
 	void Start ()
 	{
