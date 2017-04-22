@@ -1,0 +1,34 @@
+--Small World--
+-Evolution of planet
+-Several tribes AI
+-Gather resource to survive
+	-Wood (building & fire)
+	-Animals (food)
+	-Plants (food)
+	-Stone & Ore (Weapons & tools)
+-Progession
+	-Build basic house
+	-Build crafting station
+	-Build fort
+	
+-Fight off npcs (NPCs become desparate when they run low on something and nothing is nearby)
+
+-Weapons
+	-Club
+	-Bow
+	-Sword (Shield?)
+	-Lance(?)
+	-Musket
+	-Rifle
+	-Machine Gun
+
+-Aim of the game is to be the last surviving person on the planet (People become uneasy around you, if you kill them)
+
+-Stats
+	-Hunger
+	-Thirst
+	-Warmth
+	
+-Toolbar (5 items at a time)
+
+
