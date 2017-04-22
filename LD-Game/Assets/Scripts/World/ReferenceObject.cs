@@ -13,7 +13,6 @@ public class ReferenceObject : MonoBehaviour
 {
 	public BlockID ID;
 	public BlockMeta mMeta;
-	public float MaxHealth = 1.0f;
 
 	protected List<Block> Blocks = new List<Block>();
 	private Vector2 worldPosition;
@@ -28,7 +27,7 @@ public class ReferenceObject : MonoBehaviour
 		mMeta = Block.Library[ID];
 
 		if(mMeta.Destructable)
-			destroyable = new Destroyable(MaxHealth, OnHealthChange, OnKilled);
+			destroyable = new Destroyable((float)mMeta.Health / 100.0f, OnHealthChange, OnKilled);
 
 		transform.localPosition = new Vector3(x, y) * WorldController.BLOCK_SIZE;
 		worldPosition = transform.localPosition;

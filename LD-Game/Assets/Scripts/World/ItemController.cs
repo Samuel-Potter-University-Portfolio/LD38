@@ -13,7 +13,7 @@ public enum ItemID
 	Log,
 	Pickaxe,
 	Rock,
-	BasicShelter
+	Post
 }
 
 public struct ItemMeta

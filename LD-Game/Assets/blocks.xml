@@ -4,5 +4,11 @@
 <Stone ID="2" TextureID="1" Solid="true" Destructable="true" FlipX="True" FlipY="False"/>
 <Grass ID="3" TextureID="2" Solid="true" Destructable="true" FlipX="True" FlipY="False"/>
 <Tree ID="4" ObjectID="0" Solid="false" Destructable="true" DroppedItem="2"/>
-<BasicShelter ID="5" ObjectID="1" Solid="false" Destructable="false"/>
+<Brick ID="5" TextureID="3" Solid="true" Destructable="true" Health="300"/>
+<BrickFloor ID="6" TextureID="4" Solid="true" Destructable="true" FlipX="True" FlipY="False" Health="300"/>
+<Post ID="7" TextureID="5" Solid="true" Destructable="true" FlipX="True" FlipY="False"/>
+<Anivl ID="8" ObjectID="1" Solid="false" Destructable="false" FlipX="True" FlipY="False"/>
+<Chest ID="9" ObjectID="2" Solid="false" Destructable="false" FlipX="True" FlipY="False"/>
+<QuestBoard ID="10" ObjectID="3" Solid="false" Destructable="false" FlipX="True" FlipY="False"/>
+<VillageDoor ID="11" ObjectID="4" Solid="false" Destructable="false" FlipX="True" FlipY="False"/>
 </Blocks>

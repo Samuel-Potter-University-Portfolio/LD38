@@ -107,7 +107,7 @@ public class Person : MonoBehaviour
 
 	void OnCollisionEnter2D(Collision2D collision)
 	{
-		if (collision.contacts[0].point.y < transform.position.y - 1.0f)
+		if (collision.contacts[0].point.y < transform.position.y - 1.5f)
 		{
 			floors.Add(collision.collider);
 			TouchingGround = true;

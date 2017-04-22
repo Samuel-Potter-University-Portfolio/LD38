@@ -12,11 +12,13 @@ public class WorldController : MonoBehaviour {
 
 	[SerializeField]
 	private Block BaseBlock;
+	[SerializeField]
+	private Background BackgroundBlock;
 	public Sprite[] TileSheet;
 	public ReferenceObject[] ObjectSheet;
 
-	public static int WORLD_WIDTH { get { return 512; } }
-	public static int WORLD_HEIGHT { get { return 64; } }
+	public static int WORLD_WIDTH { get { return 64; } }
+	public static int WORLD_HEIGHT { get { return 32; } }
 	public static float BLOCK_SIZE { get { return 2.0f; } }
 
 	private Block[,] Blocks;
@@ -30,61 +32,75 @@ public class WorldController : MonoBehaviour {
 
 		Blocks = new Block[WORLD_WIDTH, WORLD_HEIGHT];
 		GenerateWorld();
-		SpawnPlayers();
+		SpawnPerson(true, WORLD_WIDTH/2, 10);
     }
 
 	void GenerateWorld()
 	{
-		//Generate heights
-		const float baseHeight = 40.0f;
-		const float deviation = 5.0f;
-		const int Resolution = 10;
-		float[] heights = new float[Resolution];
+		const float flatHeight = 10.0f;
 
-		heights[0] = baseHeight + (Random.value * 2.0f - 1.0f) * deviation;
-
-		for (int i = 1; i < Resolution; i++)
-			heights[i] = heights[i-1] + (Random.value * 2.0f - 1.0f) * deviation;
-		
-
-		//Build world
-		for (int x = 0; x < WORLD_WIDTH; ++x)
+		//Flat plain
 		{
-			float v = (float)x / (float)(WORLD_WIDTH - 1);
+			for (int x = 0; x < WORLD_WIDTH; ++x)
+				for (int y = 0; y < flatHeight; ++y)
+				{
+					if (y == flatHeight - 1)
+						SpawnBlock(BlockID.Grass, x, y);
+					else if (y >= flatHeight - 4)
+						SpawnBlock(BlockID.Dirt, x, y);
+					else
+						SpawnBlock(BlockID.Stone, x, y);
+				}
+		}
 
-			int i0 = Mathf.FloorToInt(v * (Resolution - 2));
-			int i1 = Mathf.FloorToInt(v * (Resolution - 2)) + 1;
+		//Fort
+		{ 
+			int fortX = Mathf.FloorToInt(WORLD_WIDTH / 2.0f);
+			int fortY = Mathf.FloorToInt(flatHeight);
 
-			float l = (float)(x % (Resolution - 1)) / (float)(Resolution - 1);
+			const int fortRadius = 6;
+			const int fortHeight = 4;
 
-			float height = heights[i0] * (1.0f - l) + heights[i1] * l;
-			int currentHeight = Mathf.FloorToInt(height); 
-
-			if (currentHeight >= WORLD_HEIGHT - 1)
-				currentHeight = (int)WORLD_HEIGHT - 1;
-
-			for (int y = 0; y <= currentHeight; ++y)
+			for (int y = 0; y < fortHeight; ++y)
 			{
-				if (y == currentHeight)
-					SpawnBlock(BlockID.Grass, x, y);
-				else if (y >= currentHeight - 4.0f)
-					SpawnBlock(BlockID.Dirt, x, y);
-				else
-					SpawnBlock(BlockID.Stone, x, y);
-
+				SpawnBlock(BlockID.Brick, fortX - fortRadius, fortY + y);
+				SpawnBlock(BlockID.Brick, fortX + fortRadius, fortY + y);
 			}
 
-        }
+			for (int x = 0; x <= fortRadius; ++x)
+				for (int y = 0; y < fortHeight; ++y)
+				{
+					SpawnBackground(BlockID.Brick, fortX - x, fortY + y);
+					SpawnBackground(BlockID.Brick, fortX + x, fortY + y);
+				}
+
+			SpawnBlock(BlockID.Brick, fortX - fortRadius - 1, fortY + fortHeight - 1);
+			SpawnBlock(BlockID.Brick, fortX + fortRadius + 1, fortY + fortHeight - 1);
+			SpawnBlock(BlockID.Brick, fortX - fortRadius - 1, fortY + fortHeight);
+			SpawnBlock(BlockID.Brick, fortX + fortRadius + 1, fortY + fortHeight);
+
+			for (int x = 0; x <= fortRadius; ++x)
+			{
+				SpawnBlock(BlockID.BrickFloor, fortX - x, fortY - 1);
+				SpawnBlock(BlockID.BrickFloor, fortX + x, fortY - 1);
+			}
+
+			Place(BlockID.VillageDoor, fortX, fortY);
+			Place(BlockID.Chest, fortX - 1, fortY);
+			Place(BlockID.Anvil, fortX - 3, fortY);
+			Place(BlockID.QuestBoard, fortX + 2, fortY);
+		}
 
 
+		//Init blocks
 		WorldInit = true;
-
 
 		for (uint x = 0; x < WORLD_WIDTH; ++x)
 			for (uint y = 0; y < WORLD_HEIGHT; ++y)
 				if(Blocks[x, y] != null)
 					Blocks[x, y].WorldInit(this);
 	}
+	
 
 	public void Place(BlockID id, int x, int y)
 	{
@@ -119,13 +135,31 @@ public class WorldController : MonoBehaviour {
 			block.WorldInit(this);
 
 		return block;
-    }
+	}
+
+	public Background SpawnBackground(BlockID id, int x, int y)
+	{
+		Background block = Instantiate(BackgroundBlock, transform);
+		block.gameObject.transform.localPosition = new Vector3(x * BLOCK_SIZE, y * BLOCK_SIZE, 0);
+
+		block.id = id;
+		block.x = x;
+		block.y = y;
+		
+		block.WorldInit(this);
+		return block;
+	}
 
 	public void RemoveBlock(int x, int y)
 	{
 		if (Blocks[x, y] != null)
 			Destroy(Blocks[x, y].gameObject);
 		Blocks[x, y] = null;
+	}
+
+	public bool HasBlock(int x, int y)
+	{
+		return !(Blocks[x,y] == null || Blocks[x,y].id == BlockID.None);
 	}
 
 	void SpawnPerson(bool isPlayer, int x, int y)

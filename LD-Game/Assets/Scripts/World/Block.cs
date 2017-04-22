@@ -12,7 +12,13 @@ public enum BlockID
 	Stone,
 	Grass,
 	Tree,
-	BasicShelter
+	Brick,
+	BrickFloor,
+	Post,
+	Anvil,
+	Chest,
+	QuestBoard,
+    VillageDoor
 }
 
 
@@ -24,6 +30,7 @@ public struct BlockMeta
 	public bool IsRefBlock { get { return ObjectID != -1; } }
 
 	public bool Destructable;
+	public int Health;
 	public bool Solid;
 
 	public bool FlipX;
@@ -73,7 +80,7 @@ public class Destroyable
 		
 		else if (Health != MaxHealth)
 		{
-			Health = MaxHealth;
+			Health += 0.25f * deltaTime;
 			OnHealthChange();
 		}
     }
@@ -102,11 +109,11 @@ public class Block : MonoBehaviour
 {
 	public static Dictionary<BlockID, BlockMeta> Library { get; private set; }
 
-	private BlockMeta mMeta;
-	private SpriteRenderer mSprite;
+	protected BlockMeta mMeta;
+	protected SpriteRenderer mSprite;
 
-	private bool MouseIsOver = false;
-	private Destroyable destroyable;
+	protected bool MouseIsOver = false;
+	protected Destroyable destroyable;
 
 	[System.NonSerialized]
 	public BlockID id;
@@ -119,7 +126,7 @@ public class Block : MonoBehaviour
 	public ReferenceObject RefObject;
 
 
-	public void WorldInit(WorldController worldController)
+	public virtual void WorldInit(WorldController worldController)
 	{
 		mSprite = GetComponentInChildren<SpriteRenderer>();
 		mMeta = Library[id];
@@ -129,7 +136,7 @@ public class Block : MonoBehaviour
 			mSprite.sprite = WorldController.Main.TileSheet[mMeta.TextureID];
 
 			if(mMeta.Destructable)
-				destroyable = new Destroyable(1.0f, OnHealthChange, OnKilled);
+				destroyable = new Destroyable((float)mMeta.Health/100.0f, OnHealthChange, OnKilled);
         }
 		else
 			mSprite.enabled = false;
@@ -158,6 +165,7 @@ public class Block : MonoBehaviour
 			meta.TextureID = XML.GetInt(node.Attributes["TextureID"], -1);
 			meta.ObjectID = XML.GetInt(node.Attributes["ObjectID"], -1);
 
+			meta.Health = XML.GetInt(node.Attributes["Health"], 100);
 			meta.Destructable = XML.GetBool(node.Attributes["Destructable"]);
 			meta.Solid = XML.GetBool(node.Attributes["Solid"]);
 
@@ -173,7 +181,7 @@ public class Block : MonoBehaviour
 		Debug.Log("Loaded " + Library.Count + " block meta");
     }
 	
-	void Update()
+	protected virtual void Update()
 	{
 		if (destroyable != null)
 			destroyable.Update(Time.deltaTime);
@@ -207,8 +215,10 @@ public class Block : MonoBehaviour
 	void OnHealthChange()
 	{
 		float Health = destroyable.NormalizedHealth;
-		mSprite.transform.rotation = Quaternion.AngleAxis(90.0f * (1.0f - Health), Vector3.forward);
-		mSprite.transform.localScale = Vector3.one * Health;
+
+		mSprite.color = Color.white * Health + Color.black * (1.0f - Health);
+		//mSprite.transform.rotation = Quaternion.AngleAxis(90.0f * (1.0f - Health), Vector3.forward);
+		//mSprite.transform.localScale = Vector3.one * Health;
 	}
 
 	void OnKilled()

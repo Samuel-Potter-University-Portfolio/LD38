@@ -1,34 +1,21 @@
+Wave structure:
+	-Duration
+	-Creatures
 
-Block properties (xml)**DONE**
-	-Destructable (Tool required)
-	-Solid/Walkable(Up/Down (Ladder))
-	-Reference block (Irregular holder e.g. crafting station, house)	
-	-Random rot (x,y)
-	-Dropped item (amount)
+Minons:
+	-Default
+	-Flying
+	-Proper mining
+	
+Weapons:
+	-Sword
+	-Bow
+	-Musket
+	-Fire Ball
+	-Mini-gun
 
-Meters: **Done**
-	-Hunger
-	-Thirst
-	-Health
-	-Stamina
-
-Stations:
-	-Basic Shelter (Upgrade)
-		->Wooden Shack
-		->Stone Fort
-		->City
-	-Crafting Station
-	-Furnace
+Station
 	-Anvil
-Items:
-	-Hot bar
-	-Basic Inventory (Shelter acts as chest)
-	-Crafting UI for cs,f,a
+	-Board
+	-Chest
 	
-	
-	
-
-Day and night
-Seasons
-
-

@@ -10,6 +10,9 @@ public class PlayerInput : MonoBehaviour {
 	public static PlayerInput Main { get; private set; }
 	public Person mPerson { get; private set; }
 
+	public int WorldX { get { return Mathf.RoundToInt(transform.position.x / WorldController.BLOCK_SIZE); } }
+	public int WorldY { get { return Mathf.RoundToInt(transform.position.y / WorldController.BLOCK_SIZE); } }
+
 	[SerializeField]
 	private RectTransform[] ResourceBars;
 
@@ -32,12 +35,15 @@ public class PlayerInput : MonoBehaviour {
 		UpdateMovement();
 
 		//Place item
-		if (mPerson.TouchingGround && Input.GetKeyDown(KeyCode.E) && CurrentlySelected != null && CurrentlySelected.mMeta.PlacesBlock != BlockID.None)
+		if (mPerson.TouchingGround && Input.GetKeyDown(KeyCode.E))
 		{
-			WorldController.Main.Place(CurrentlySelected.mMeta.PlacesBlock, Mathf.RoundToInt(transform.position.x / WorldController.BLOCK_SIZE), Mathf.RoundToInt(transform.position.y / WorldController.BLOCK_SIZE));
+			if (CurrentlySelected != null && CurrentlySelected.mMeta.PlacesBlock != BlockID.None && !WorldController.Main.HasBlock(WorldX, WorldY))
+			{
+				WorldController.Main.Place(CurrentlySelected.mMeta.PlacesBlock, WorldX, WorldY);
 
-			CurrentlySelected.SetID(ItemID.None);
-			HotbarSelected(null);
+				CurrentlySelected.SetID(ItemID.None);
+				HotbarSelected(null);
+			}
         }
     }
 
