@@ -1,11 +1,12 @@
 fileFormatVersion: 2
 guid: a7ccb8008507ad64f82dd8a63d9abd66
-timeCreated: 1492853416
+timeCreated: 1492855866
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
     21300000: Tileset_0
     21300002: Tileset_1
+    21300004: Tileset_2
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -37,8 +38,8 @@ TextureImporter:
   lightmap: 0
   compressionQuality: 50
   spriteMode: 2
-  spriteExtrude: 1
-  spriteMeshType: 1
+  spriteExtrude: 0
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
@@ -53,7 +54,7 @@ TextureImporter:
   textureFormatSet: 0
   platformSettings:
   - buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 8192
     textureFormat: -1
     textureCompression: 0
     compressionQuality: 50
@@ -61,7 +62,7 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
   - buildTarget: Standalone
-    maxTextureSize: 2048
+    maxTextureSize: 8192
     textureFormat: -1
     textureCompression: 0
     compressionQuality: 50
@@ -69,7 +70,7 @@ TextureImporter:
     allowsAlphaSplitting: 0
     overridden: 0
   - buildTarget: Android
-    maxTextureSize: 2048
+    maxTextureSize: 8192
     textureFormat: -1
     textureCompression: 0
     compressionQuality: 50
@@ -97,6 +98,19 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 8
+        y: 56
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Tileset_2
+      rect:
+        serializedVersion: 2
+        x: 16
         y: 56
         width: 8
         height: 8

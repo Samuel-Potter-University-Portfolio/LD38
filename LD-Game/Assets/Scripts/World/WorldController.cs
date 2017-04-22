@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class WorldController : MonoBehaviour {
 
 	public static WorldController Main { get; private set; }
@@ -14,7 +15,7 @@ public class WorldController : MonoBehaviour {
 	public Sprite[] TileSheet;
 
 	public static uint WORLD_WIDTH { get { return 128; } }
-	public static uint WORLD_HEIGHT { get { return 8; } }
+	public static uint WORLD_HEIGHT { get { return 16; } }
 	public static float BLOCK_SIZE { get { return 2.0f; } }
 
 	public Block[,] Blocks;
@@ -32,20 +33,30 @@ public class WorldController : MonoBehaviour {
 	void GenerateWorld()
 	{
 		for (uint x = 0; x < WORLD_WIDTH; ++x)
-			for (uint y = 0; y < WORLD_HEIGHT; ++y)
+			for (uint y = 0; y < WORLD_HEIGHT - 8; ++y)
 			{
-				uint id = y <= 4 ? 1u : 0u;
+				BlockID id = y <= 4 ? BlockID.Stone : BlockID.Dirt;
 				SpawnBlock(id, x, y);
-			}	
+			}
+
+		for (uint x = 0; x < WORLD_WIDTH; ++x)
+		{
+			SpawnBlock(x % 16 == 0 ? BlockID.Dirt : BlockID.Grass, x, 8);
+
+			if (x % 16 == 0)
+				SpawnBlock(BlockID.Grass, x, 9);
+
+		}
 
 		WorldInit = true;
 
 		for (uint x = 0; x < WORLD_WIDTH; ++x)
 			for (uint y = 0; y < WORLD_HEIGHT; ++y)
-				Blocks[x, y].WorldInit(this);
+				if(Blocks[x, y] != null)
+					Blocks[x, y].WorldInit(this);
 	}
 
-	void SpawnBlock(uint id, uint x, uint y)
+	void SpawnBlock(BlockID id, uint x, uint y)
 	{
 		Block block = Instantiate(BaseBlock, transform);
 		block.gameObject.transform.localPosition = new Vector3(x * BLOCK_SIZE, y * BLOCK_SIZE, 0);
