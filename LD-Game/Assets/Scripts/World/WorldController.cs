@@ -1,0 +1,61 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class WorldController : MonoBehaviour {
+
+	public static WorldController Main { get; private set; }
+
+	[SerializeField]
+	private Block BaseBlock;
+	public Sprite[] TileSheet;
+
+
+	public static uint WORLD_WIDTH { get { return 128; } }
+	public static uint WORLD_HEIGHT { get { return 8; } }
+
+	public Block[,] Blocks;
+	private bool WorldInit = false;
+
+	void Start ()
+	{
+		Main = this;
+		Blocks = new Block[WORLD_WIDTH, WORLD_HEIGHT];
+		GenerateWorld();
+    }
+
+	void GenerateWorld()
+	{
+		for (uint x = 0; x < WORLD_WIDTH; ++x)
+			for (uint y = 0; y < WORLD_HEIGHT; ++y)
+			{
+				uint id = y <= 4 ? 1u : 0u;
+				SpawnBlock(id, x, y);
+			}	
+
+		WorldInit = true;
+
+		for (uint x = 0; x < WORLD_WIDTH; ++x)
+			for (uint y = 0; y < WORLD_HEIGHT; ++y)
+				Blocks[x, y].WorldInit(this);
+	}
+
+	void SpawnBlock(uint id, uint x, uint y)
+	{
+		Block block = Instantiate(BaseBlock.gameObject, transform).GetComponent<Block>();
+		block.gameObject.transform.localPosition = new Vector3(x * 2.0f, y * 2.0f, 0);
+		Blocks[x, y] = block;
+
+		block.id = id;
+		block.x = x;
+		block.y = y;
+
+		if (WorldInit)
+			block.WorldInit(this);
+    }
+
+	void Update ()
+	{
+		
+	}
+}
