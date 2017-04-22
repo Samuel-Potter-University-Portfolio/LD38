@@ -13,12 +13,13 @@ public class WorldController : MonoBehaviour {
 	[SerializeField]
 	private Block BaseBlock;
 	public Sprite[] TileSheet;
+	public ReferenceObject[] ObjectSheet;
 
-	public static uint WORLD_WIDTH { get { return 128; } }
-	public static uint WORLD_HEIGHT { get { return 64; } }
+	public static int WORLD_WIDTH { get { return 128; } }
+	public static int WORLD_HEIGHT { get { return 64; } }
 	public static float BLOCK_SIZE { get { return 2.0f; } }
 
-	public Block[,] Blocks;
+	private Block[,] Blocks;
 	private bool WorldInit = false;
 
 
@@ -37,9 +38,9 @@ public class WorldController : MonoBehaviour {
 		const float bumps = 5.0f;
 		const float height = 5.0f;
 		const float start_height = 20.0f;
-
+		
 		//Sin wave
-		for (uint x = 0; x < WORLD_WIDTH; ++x)
+		for (int x = 0; x < WORLD_WIDTH; ++x)
 		{
 			float v = (float)x / (float)WORLD_WIDTH;
 			float normalized_height = Mathf.Sin(v * Mathf.PI * 2.0f * bumps) * 0.5f + 0.5f;
@@ -48,7 +49,7 @@ public class WorldController : MonoBehaviour {
 			if (current_height >= WORLD_HEIGHT - 1)
 				current_height = (int)WORLD_HEIGHT - 1;
 
-			for (uint y = 0; y <= current_height; ++y)
+			for (int y = 0; y <= current_height; ++y)
 			{
 				if (y == current_height)
 					SpawnBlock(BlockID.Grass, x, y);
@@ -61,6 +62,8 @@ public class WorldController : MonoBehaviour {
 
         }
 
+		SpawnRaw(BlockID.Tree, WORLD_WIDTH / 2, 10);
+
 		WorldInit = true;
 
 		for (uint x = 0; x < WORLD_WIDTH; ++x)
@@ -69,7 +72,23 @@ public class WorldController : MonoBehaviour {
 					Blocks[x, y].WorldInit(this);
 	}
 
-	public void SpawnBlock(BlockID id, uint x, uint y)
+	public void SpawnRaw(BlockID id, int x, int y)
+	{
+		if (!Block.Library[id].IsRefBlock)
+			SpawnBlock(id, x, y);
+		else
+		{
+			foreach (ReferenceObject obj in ObjectSheet)
+				if (obj.ID == id)
+				{
+					ReferenceObject NewObject = Instantiate(obj, transform);
+					NewObject.PlaceInWorld(x, y);
+					return;
+				}
+		}
+    }
+
+	public Block SpawnBlock(BlockID id, int x, int y)
 	{
 		if (Blocks[x, y] != null)
 			RemoveBlock(x, y);
@@ -84,12 +103,14 @@ public class WorldController : MonoBehaviour {
 
 		if (WorldInit)
 			block.WorldInit(this);
+
+		return block;
     }
 
-	public void RemoveBlock(uint x, uint y)
+	public void RemoveBlock(int x, int y)
 	{
 		if (Blocks[x, y] != null)
-			Destroy(Blocks[x, y]);
+			Destroy(Blocks[x, y].gameObject);
 		Blocks[x, y] = null;
 	}
 
