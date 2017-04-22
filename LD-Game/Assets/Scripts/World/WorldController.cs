@@ -15,7 +15,7 @@ public class WorldController : MonoBehaviour {
 	public Sprite[] TileSheet;
 	public ReferenceObject[] ObjectSheet;
 
-	public static int WORLD_WIDTH { get { return 128; } }
+	public static int WORLD_WIDTH { get { return 512; } }
 	public static int WORLD_HEIGHT { get { return 64; } }
 	public static float BLOCK_SIZE { get { return 2.0f; } }
 
@@ -30,30 +30,44 @@ public class WorldController : MonoBehaviour {
 
 		Blocks = new Block[WORLD_WIDTH, WORLD_HEIGHT];
 		GenerateWorld();
-		SpawnPerson(true);
+		SpawnPlayers();
     }
 
 	void GenerateWorld()
 	{
-		const float bumps = 5.0f;
-		const float height = 5.0f;
-		const float start_height = 20.0f;
+		//Generate heights
+		const float baseHeight = 40.0f;
+		const float deviation = 5.0f;
+		const int Resolution = 10;
+		float[] heights = new float[Resolution];
+
+		heights[0] = baseHeight + (Random.value * 2.0f - 1.0f) * deviation;
+
+		for (int i = 1; i < Resolution; i++)
+			heights[i] = heights[i-1] + (Random.value * 2.0f - 1.0f) * deviation;
 		
-		//Sin wave
+
+		//Build world
 		for (int x = 0; x < WORLD_WIDTH; ++x)
 		{
-			float v = (float)x / (float)WORLD_WIDTH;
-			float normalized_height = Mathf.Sin(v * Mathf.PI * 2.0f * bumps) * 0.5f + 0.5f;
-			int current_height = Mathf.FloorToInt(start_height + normalized_height * height);
+			float v = (float)x / (float)(WORLD_WIDTH - 1);
 
-			if (current_height >= WORLD_HEIGHT - 1)
-				current_height = (int)WORLD_HEIGHT - 1;
+			int i0 = Mathf.FloorToInt(v * (Resolution - 2));
+			int i1 = Mathf.FloorToInt(v * (Resolution - 2)) + 1;
 
-			for (int y = 0; y <= current_height; ++y)
+			float l = (float)(x % (Resolution - 1)) / (float)(Resolution - 1);
+
+			float height = heights[i0] * (1.0f - l) + heights[i1] * l;
+			int currentHeight = Mathf.FloorToInt(height); 
+
+			if (currentHeight >= WORLD_HEIGHT - 1)
+				currentHeight = (int)WORLD_HEIGHT - 1;
+
+			for (int y = 0; y <= currentHeight; ++y)
 			{
-				if (y == current_height)
+				if (y == currentHeight)
 					SpawnBlock(BlockID.Grass, x, y);
-				else if (y >= current_height - 4.0f)
+				else if (y >= currentHeight - 4.0f)
 					SpawnBlock(BlockID.Dirt, x, y);
 				else
 					SpawnBlock(BlockID.Stone, x, y);
@@ -62,10 +76,9 @@ public class WorldController : MonoBehaviour {
 
         }
 
-		Place(BlockID.Tree, WORLD_WIDTH / 2, 10);
-		Place(BlockID.BasicShelter, WORLD_WIDTH / 2, 18);
 
 		WorldInit = true;
+
 
 		for (uint x = 0; x < WORLD_WIDTH; ++x)
 			for (uint y = 0; y < WORLD_HEIGHT; ++y)
@@ -115,12 +128,46 @@ public class WorldController : MonoBehaviour {
 		Blocks[x, y] = null;
 	}
 
-	void SpawnPerson(bool isPlayer)
+	void SpawnPerson(bool isPlayer, int x, int y)
 	{
+		Debug.Log("Spawn Player (" + x + "," + y + ")[" + (isPlayer ? "Ply" : "Bot") + "]");
+
 		Person person = Instantiate(BasePerson);
 		person.IsPlayer = isPlayer;
-		person.transform.position = new Vector3(WORLD_WIDTH / 2.0f * BLOCK_SIZE, WORLD_HEIGHT * BLOCK_SIZE);
-    }
+		person.transform.position = new Vector3(x * BLOCK_SIZE, y * BLOCK_SIZE);
+	}
+
+	void SpawnPlayers()
+	{
+		const int playerCount = 8;
+
+		for (int i = 0; i < playerCount; ++i)
+		{
+			float v = (float)i / (float)(playerCount - 1);
+
+			int x = Mathf.FloorToInt(v * (WORLD_WIDTH - 30)) + 15;
+			int y = FindHeight(x);
+
+			SpawnPerson(i == 3, x, y);
+
+			//Spawn nearby tree
+			{
+				int treeX = x - 5;
+				int treeY = FindHeight(treeX);
+
+				Place(BlockID.Tree, treeX, treeY);
+            }
+		}
+	}
+
+	public int FindHeight(int x)
+	{
+		for (int y = 0; y < WORLD_HEIGHT; ++y)
+			if (Blocks[x, y] == null || Blocks[x, y].id == BlockID.None)
+				return y;
+
+		return WORLD_HEIGHT - 1;
+	}
 
 	void Update ()
 	{
