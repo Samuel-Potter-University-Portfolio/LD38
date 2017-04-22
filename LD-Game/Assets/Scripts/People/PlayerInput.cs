@@ -23,7 +23,7 @@ public class PlayerInput : MonoBehaviour {
 
 		mPerson.HungerBar.SetAnimBar(ResourceBars[0]);
 		mPerson.ThirstBar.SetAnimBar(ResourceBars[1]);
-		mPerson.StaminaBar.SetAnimBar(ResourceBars[2]);
+		mPerson.StaminaBar.SetAnimBar(ResourceBars[2]); 
 		mPerson.HealthBar.SetAnimBar(ResourceBars[3]);
 	}
 	

@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class Person : MonoBehaviour {
+public class Person : MonoBehaviour
+{
 
 	//Movement
 	public float Acceleration = 20.0f;
@@ -26,10 +27,15 @@ public class Person : MonoBehaviour {
 	public ResourceBar StaminaBar;
 	public ResourceBar HealthBar;
 
+	public ItemSlot[] HotBar;
+
 	void Start ()
 	{
 		Camera camera = GetComponentInChildren<Camera>();
 		camera.gameObject.SetActive(IsPlayer);
+
+		RectTransform canvas = GetComponentInChildren<RectTransform>();
+		canvas.gameObject.SetActive(IsPlayer);
 
 		PlayerInput playerInput = GetComponent<PlayerInput>();
 		playerInput.enabled = IsPlayer;
@@ -118,5 +124,22 @@ public class Person : MonoBehaviour {
 			if (TouchingGround)
 				TouchingGround = floors.Count != 0;
 		}
+	}
+
+	public bool GiveItem(ItemID ID)
+	{
+		Debug.Log(ID);
+		foreach (ItemSlot slot in HotBar)
+		{
+			if (slot.ID == ItemID.None)
+			{
+				slot.SetID(ID);
+				Debug.Log("Gif");
+				return true;
+			}
+		}
+
+		Debug.Log("Non");
+		return false;
 	}
 }

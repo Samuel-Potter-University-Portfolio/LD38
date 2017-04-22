@@ -7,7 +7,8 @@ using System.Xml;
 
 public enum BlockID
 {
-	Dirt = 0,
+	None = 0,
+	Dirt,
 	Stone,
 	Grass,
 	Tree
@@ -27,9 +28,8 @@ public struct BlockMeta
 	public bool FlipX;
 	public bool FlipY;
 
-	public uint DestroyTool;
-	public uint DroppedItem;
-	public uint DroppedAmount;
+	public ItemID DestroyTool;
+	public ItemID DroppedItem;
 }
 
 
@@ -41,7 +41,8 @@ public class Destroyable
 
 	private float HitCoolDown;
 	private float ResetTime;
-	
+
+	public Person LastPerson { get; private set; }
 	public delegate void ChangeDelegate();
 
 	public ChangeDelegate OnHealthChange;
@@ -76,12 +77,12 @@ public class Destroyable
 		}
     }
 
-	public bool AttemptDamage(float amount)
+	public bool AttemptDamage(float amount, Person who)
 	{
 		if (Health <= 0.0f || HitCoolDown > 0.0f)
 			return false;
-		
 
+		LastPerson = who;
 		HitCoolDown = 0.5f;
 		ResetTime = 1.0f;
 		Health -= amount;
@@ -147,53 +148,28 @@ public class Block : MonoBehaviour
 
 		foreach (XmlNode node in blocksDoc.DocumentElement.ChildNodes)
 		{
-			BlockID id = (BlockID)GetInt(node.Attributes["ID"]);
+			BlockID id = (BlockID)XML.GetInt(node.Attributes["ID"]);
 
 			BlockMeta meta = new BlockMeta();
 
-			meta.TextureID = GetInt(node.Attributes["TextureID"], -1);
-			meta.ObjectID = GetInt(node.Attributes["ObjectID"], -1);
+			meta.TextureID = XML.GetInt(node.Attributes["TextureID"], -1);
+			meta.ObjectID = XML.GetInt(node.Attributes["ObjectID"], -1);
 
-			meta.Destructable = GetBool(node.Attributes["Destructable"]);
-			meta.Solid = GetBool(node.Attributes["Solid"]);
+			meta.Destructable = XML.GetBool(node.Attributes["Destructable"]);
+			meta.Solid = XML.GetBool(node.Attributes["Solid"]);
 
-			meta.FlipX = GetBool(node.Attributes["FlipX"]);
-			meta.FlipY = GetBool(node.Attributes["FlipY"]);
+			meta.FlipX = XML.GetBool(node.Attributes["FlipX"]);
+			meta.FlipY = XML.GetBool(node.Attributes["FlipY"]);
 			
-            meta.DestroyTool = GetUInt(node.Attributes["DestroyTool"]);
-			meta.DroppedItem = GetUInt(node.Attributes["DroppedItem"]);
-			meta.DroppedAmount = GetUInt(node.Attributes["DroppedAmount"]);
+            meta.DestroyTool = (ItemID)XML.GetUInt(node.Attributes["DestroyTool"]);
+			meta.DroppedItem = (ItemID)XML.GetUInt(node.Attributes["DroppedItem"]);
 			
 			Library[id] = meta;
 		}
 
 		Debug.Log("Loaded " + Library.Count + " block meta");
     }
-
-	private static int GetInt(XmlAttribute attrib, int defaultValue = 0)
-	{
-		if (attrib == null)
-			return defaultValue;
-		else
-			return System.Int32.Parse(attrib.Value);
-	}
-
-	private static uint GetUInt(XmlAttribute attrib, uint defaultValue = 0)
-	{
-		if (attrib == null)
-			return defaultValue;
-		else
-			return System.UInt32.Parse(attrib.Value);
-	}
-
-	private static bool GetBool(XmlAttribute attrib, bool defaultValue = false)
-	{
-		if (attrib == null)
-			return defaultValue;
-		else
-			return attrib.Value.ToLower().Equals("true");
-	}
-
+	
 	void Update()
 	{
 		if (destroyable != null)
@@ -206,9 +182,9 @@ public class Block : MonoBehaviour
 			//Destroy block
 			if (Input.GetMouseButton(0) && Vector2.Distance(transform.position, PlayerInput.Main.transform.position) < PlayerInput.Main.InteractRange)
 				if (RefObject != null)
-					RefObject.destroyable.AttemptDamage(damage);
+					RefObject.destroyable.AttemptDamage(damage, PlayerInput.Main.mPerson);
 				else
-					destroyable.AttemptDamage(damage);
+					destroyable.AttemptDamage(damage, PlayerInput.Main.mPerson);
 		}
     }
 
@@ -233,5 +209,8 @@ public class Block : MonoBehaviour
 	{
 		gameObject.SetActive(false);
 		WorldController.Main.RemoveBlock(x, y);
+
+		if (mMeta.DroppedItem != ItemID.None)
+			destroyable.LastPerson.GiveItem(mMeta.DroppedItem);
 	}
 }
