@@ -26,10 +26,17 @@ public struct BlockMeta
 }
 
 
-[RequireComponent(typeof(SpriteRenderer))]
 public class Block : MonoBehaviour
 {
 	private static Dictionary<BlockID, BlockMeta> library = new Dictionary<BlockID, BlockMeta>();
+
+	private SpriteRenderer mSprite;
+
+	private bool MouseIsOver = false;
+	private float Health = 1.0f;
+	private float HitCoolDown = 0.0f;
+	private float ResetTime = 0.0f;
+
 
 	[System.NonSerialized]
 	public BlockID id;
@@ -40,15 +47,15 @@ public class Block : MonoBehaviour
 	
 	public void WorldInit(WorldController worldController)
 	{
-		SpriteRenderer renderer = GetComponent<SpriteRenderer>();
-		renderer.sprite = WorldController.Main.TileSheet[(uint)id];
+		mSprite = GetComponentInChildren<SpriteRenderer>();
+		mSprite.sprite = WorldController.Main.TileSheet[(uint)id];
 
 		BlockMeta meta = library[id];
 
 		if (meta.FlipX)
-			renderer.flipX = Random.value >= 0.5f;
+			mSprite.flipX = Random.value >= 0.5f;
 		if (meta.FlipY)
-			renderer.flipY = Random.value >= 0.5f;
+			mSprite.flipY = Random.value >= 0.5f;
 	}
 
 	public static void LibInit(WorldController worldController)
@@ -102,8 +109,61 @@ public class Block : MonoBehaviour
 			return attrib.Value.ToLower().Equals("true");
 	}
 
-	void Update ()
+	void Update()
 	{
-		
-	}
+		if (MouseIsOver)
+		{
+			//Destroy block
+			if (Input.GetMouseButton(0) && Vector2.Distance(transform.position, PlayerInput.Main.transform.position) < PlayerInput.Main.InteractRange)
+				if (HitCoolDown <= 0.0f)
+					Damage(0.34f);
+		}
+
+
+		float deltaTime = Time.deltaTime;
+
+		//Update timers
+		if (ResetTime > 0.0f)
+			ResetTime -= deltaTime;
+
+		else if (Health != 0.0f)
+		{
+			Health = 1.0f;
+			mSprite.transform.rotation = Quaternion.identity;
+			mSprite.transform.localScale = Vector3.one;
+		}
+
+		if(HitCoolDown > 0.0f)
+			HitCoolDown -= deltaTime;
+
+		//Animate on health
+		if (Health != 1.0f)
+		{
+			mSprite.transform.rotation = Quaternion.AngleAxis(90.0f * (1.0f - Health), Vector3.forward);
+			mSprite.transform.localScale = Vector3.one * Health;
+        }
+    }
+
+	void OnMouseEnter()
+	{
+		MouseIsOver = true;
+    }
+
+	void OnMouseExit()
+	{
+		MouseIsOver = false;
+    }
+	
+	void Damage(float amount)
+	{
+		HitCoolDown = 0.5f;
+		ResetTime = 2.0f;
+		Health -= amount;
+
+		if (Health < 0.0f)
+		{
+			gameObject.SetActive(false);
+			WorldController.Main.RemoveBlock(x, y);
+		}
+    }
 }

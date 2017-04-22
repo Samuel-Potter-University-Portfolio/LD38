@@ -69,8 +69,11 @@ public class WorldController : MonoBehaviour {
 					Blocks[x, y].WorldInit(this);
 	}
 
-	void SpawnBlock(BlockID id, uint x, uint y)
+	public void SpawnBlock(BlockID id, uint x, uint y)
 	{
+		if (Blocks[x, y] != null)
+			RemoveBlock(x, y);
+
 		Block block = Instantiate(BaseBlock, transform);
 		block.gameObject.transform.localPosition = new Vector3(x * BLOCK_SIZE, y * BLOCK_SIZE, 0);
 		Blocks[x, y] = block;
@@ -82,6 +85,13 @@ public class WorldController : MonoBehaviour {
 		if (WorldInit)
 			block.WorldInit(this);
     }
+
+	public void RemoveBlock(uint x, uint y)
+	{
+		if (Blocks[x, y] != null)
+			Destroy(Blocks[x, y]);
+		Blocks[x, y] = null;
+	}
 
 	void SpawnPerson(bool isPlayer)
 	{

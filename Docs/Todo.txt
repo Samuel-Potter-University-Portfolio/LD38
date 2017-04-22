@@ -6,7 +6,7 @@ Block properties (xml)**DONE**
 	-Random rot (x,y)
 	-Dropped item (amount)
 
-Meters:
+Meters: **Done**
 	-Hunger
 	-Thirst
 	-Health
