@@ -7,21 +7,26 @@ public class WorldController : MonoBehaviour {
 	public static WorldController Main { get; private set; }
 
 	[SerializeField]
+	private Person BasePerson;
+
+	[SerializeField]
 	private Block BaseBlock;
 	public Sprite[] TileSheet;
 
-
 	public static uint WORLD_WIDTH { get { return 128; } }
 	public static uint WORLD_HEIGHT { get { return 8; } }
+	public static float BLOCK_SIZE { get { return 2.0f; } }
 
 	public Block[,] Blocks;
 	private bool WorldInit = false;
+
 
 	void Start ()
 	{
 		Main = this;
 		Blocks = new Block[WORLD_WIDTH, WORLD_HEIGHT];
 		GenerateWorld();
+		SpawnPerson(true);
     }
 
 	void GenerateWorld()
@@ -42,8 +47,8 @@ public class WorldController : MonoBehaviour {
 
 	void SpawnBlock(uint id, uint x, uint y)
 	{
-		Block block = Instantiate(BaseBlock.gameObject, transform).GetComponent<Block>();
-		block.gameObject.transform.localPosition = new Vector3(x * 2.0f, y * 2.0f, 0);
+		Block block = Instantiate(BaseBlock, transform);
+		block.gameObject.transform.localPosition = new Vector3(x * BLOCK_SIZE, y * BLOCK_SIZE, 0);
 		Blocks[x, y] = block;
 
 		block.id = id;
@@ -52,6 +57,13 @@ public class WorldController : MonoBehaviour {
 
 		if (WorldInit)
 			block.WorldInit(this);
+    }
+
+	void SpawnPerson(bool isPlayer)
+	{
+		Person person = Instantiate(BasePerson);
+		person.IsPlayer = isPlayer;
+		person.transform.position = new Vector3(WORLD_WIDTH / 2.0f * BLOCK_SIZE, WORLD_HEIGHT * BLOCK_SIZE);
     }
 
 	void Update ()
