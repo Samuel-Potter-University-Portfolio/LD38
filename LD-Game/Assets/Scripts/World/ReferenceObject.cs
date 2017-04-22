@@ -12,8 +12,12 @@ public struct Point
 public class ReferenceObject : MonoBehaviour
 {
 	public BlockID ID;
+	public BlockMeta mMeta;
 	public float MaxHealth = 1.0f;
+
 	protected List<Block> Blocks = new List<Block>();
+	private Vector2 worldPosition;
+
 	[SerializeField]
 	protected List<Point> Signature;
 	public Destroyable destroyable { get; private set; }
@@ -21,9 +25,13 @@ public class ReferenceObject : MonoBehaviour
 
 	public void PlaceInWorld(int x, int y)
 	{
-		destroyable = new Destroyable(MaxHealth, OnHealthChange, OnKilled);
+		mMeta = Block.Library[ID];
+
+		if(mMeta.Destructable)
+			destroyable = new Destroyable(MaxHealth, OnHealthChange, OnKilled);
 
 		transform.localPosition = new Vector3(x, y) * WorldController.BLOCK_SIZE;
+		worldPosition = transform.localPosition;
 
 		foreach (Point point in Signature)
 		{
@@ -35,7 +43,8 @@ public class ReferenceObject : MonoBehaviour
 
 	protected virtual void Update()
 	{
-		destroyable.Update(Time.deltaTime);
+		if(destroyable != null)
+			destroyable.Update(Time.deltaTime);
 	}
 
 	public virtual void OnKilled()
@@ -44,9 +53,13 @@ public class ReferenceObject : MonoBehaviour
 			WorldController.Main.RemoveBlock(block.x, block.y);
 
 		Destroy(gameObject);
+
+		if (mMeta.DroppedItem != ItemID.None)
+			destroyable.LastPerson.GiveItem(mMeta.DroppedItem);
 	}
 
 	public virtual void OnHealthChange()
 	{
-	}
+		transform.position = worldPosition + new Vector2(Mathf.Sin(destroyable.NormalizedHealth * Mathf.PI*2.0f), 0) * 0.25f;
+    }
 }

@@ -32,7 +32,7 @@ public class PlayerInput : MonoBehaviour {
 		UpdateMovement();
 
 		//Place item
-		if (Input.GetKeyDown(KeyCode.E) && CurrentlySelected != null && CurrentlySelected.mMeta.PlacesBlock != BlockID.None)
+		if (mPerson.TouchingGround && Input.GetKeyDown(KeyCode.E) && CurrentlySelected != null && CurrentlySelected.mMeta.PlacesBlock != BlockID.None)
 		{
 			WorldController.Main.Place(CurrentlySelected.mMeta.PlacesBlock, Mathf.RoundToInt(transform.position.x / WorldController.BLOCK_SIZE), Mathf.RoundToInt(transform.position.y / WorldController.BLOCK_SIZE));
 

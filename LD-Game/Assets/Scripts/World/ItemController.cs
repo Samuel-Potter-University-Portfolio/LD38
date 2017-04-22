@@ -11,6 +11,9 @@ public enum ItemID
 	None = 0,
 	Stick,
 	Log,
+	Pickaxe,
+	Rock,
+	BasicShelter
 }
 
 public struct ItemMeta

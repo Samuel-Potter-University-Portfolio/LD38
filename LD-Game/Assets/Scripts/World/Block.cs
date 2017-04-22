@@ -127,7 +127,9 @@ public class Block : MonoBehaviour
 		if (!mMeta.IsRefBlock)
 		{
 			mSprite.sprite = WorldController.Main.TileSheet[mMeta.TextureID];
-			destroyable = new Destroyable(1.0f, OnHealthChange, OnKilled);
+
+			if(mMeta.Destructable)
+				destroyable = new Destroyable(1.0f, OnHealthChange, OnKilled);
         }
 		else
 			mSprite.enabled = false;
@@ -183,8 +185,11 @@ public class Block : MonoBehaviour
 			//Destroy block
 			if (Input.GetMouseButton(0) && Vector2.Distance(transform.position, PlayerInput.Main.transform.position) < PlayerInput.Main.InteractRange)
 				if (RefObject != null)
-					RefObject.destroyable.AttemptDamage(damage, PlayerInput.Main.mPerson);
-				else
+				{
+					if(RefObject.destroyable != null)
+						RefObject.destroyable.AttemptDamage(damage, PlayerInput.Main.mPerson);
+				}
+				else if (destroyable != null)
 					destroyable.AttemptDamage(damage, PlayerInput.Main.mPerson);
 		}
     }
