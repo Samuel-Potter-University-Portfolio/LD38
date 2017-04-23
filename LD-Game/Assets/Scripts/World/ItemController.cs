@@ -18,7 +18,9 @@ public enum ItemID
 	Hammer,
 	Seed,
 	Axe,
-	Scaffold
+	Scaffold,
+	Key,
+	Wheat
 }
 
 public enum ToolID

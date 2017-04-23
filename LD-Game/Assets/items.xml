@@ -10,4 +10,6 @@
 <Seed ID="8" TextureID="8" Tool="False" PlacesBlock="17"/>
 <Axe ID="9" TextureID="9" Tool="True" ToolType="2" SwingTime="1000" Damage="40"/>
 <Scaffold ID="10" TextureID="10" Tool="False" PlacesBlock="15"/>
+<Key ID="11" TextureID="11" Tool="False"/>
+<Wheat ID="12" TextureID="12" Tool="False"/>
 </Items>

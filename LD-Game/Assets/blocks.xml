@@ -16,7 +16,7 @@
 <RedBrickFloor ID="14" TextureID="7" Solid="true" Destructable="false"/>
 <Scaffold ID="15" TextureID="8" Solid="true" Destructable="true" Health="50" DroppedItem="10"/>
 <Bush ID="16" TextureID="9" Solid="false" Destructable="true" Health="10" DroppedItem="8"/>
-<Wheat ID="17" TextureID="10" Solid="false" Destructable="true" Health="10" DroppedItem="8"/>
+<Wheat ID="17" TextureID="10" Solid="false" Destructable="true" Health="10" DroppedItem="12"/>
 <Twigs ID="18" TextureID="11" Solid="false" Destructable="true" Health="10" DroppedItem="1"/>
 <Cloth ID="19" TextureID="12" Solid="true" Destructable="true" Health="75"/>
 </Blocks>

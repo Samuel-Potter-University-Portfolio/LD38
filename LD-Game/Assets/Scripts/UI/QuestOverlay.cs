@@ -13,6 +13,8 @@ public class QuestOverlay : MonoBehaviour
 	private Text Title;
 	[SerializeField]
 	private Text Description;
+	[SerializeField]
+	private Text Time;
 
 
 	void Start()
@@ -24,6 +26,20 @@ public class QuestOverlay : MonoBehaviour
 	{
 		if (Input.GetKey(KeyCode.Escape))
 			Close();
+
+		if (QuestController.Main.IsTimedQuest && QuestController.Main.IsQuestActive)
+		{
+			int time = QuestController.Main.RemainingTime;
+
+			if (QuestController.Main.IsTimedQuest)
+				Time.text = time + " SECONDS REMAINING";
+			else
+				Time.text = "NO TIME LIMIT";
+
+			//Reopen if time is up
+			if (time == 0)
+				Open();
+		}
 	}
 
 	public void Open()
@@ -31,13 +47,23 @@ public class QuestOverlay : MonoBehaviour
 		if (!QuestController.Main.IsQuestActive)
 		{
 			Title.text = "NO ACTIVE QUEST";
-			Description.text = "Stop reading the damn board and go kill those goblins already!";
+			Description.text = "You slacker!\nStop reading the damn board and do your job!";
+			Time.text = "";
 		}
 		else
 		{
-			QuestMeta meta = QuestController.Main.CurrentQuest;
+			bool HandedIn = QuestController.Main.HandInQuest();
+
+            QuestMeta meta = QuestController.Main.CurrentQuest;
             Title.text = meta.Title;
 			Description.text = meta.Description;
+
+			if(HandedIn)
+				Time.text = "COMPLETED";
+			else if (QuestController.Main.IsTimedQuest)
+				Time.text = QuestController.Main.RemainingTime + " SECONDS REMAINING";
+			else
+				Time.text = "NO TIME LIMIT";
 		}
 
 		gameObject.SetActive(true);

@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Quests>
-<Story0 Story="true" Title="Welcome" Description="It's nice of you to offer to protect our village... What do you mean you didn't?... Well it's too late now. The other guards have already gone on holiday. Just don't mess it up; OK?">
+<Story Story="true" Title="Welcome" Description="It's nice of you to offer to protect our village... What do you mean you didn't?... Well it's too late now. The other guards have already gone on holiday. Just don't mess it up; OK? Just pass your key over and once you're done, I'll tell you what you need to do!">
+	<Requires ID="11" Amount="1"/>
+</Story>
+<Story Story="true" Title="Food" Description="So your first task is to get some food for us. I've given you some seed so go plant it then harvest the wheat. Hurry it up too!">
+	<Get ID="8" Amount="5"/>
+	<Requires ID="12" Amount="5"/>
+</Story>
+<Story Story="true" Title="Warmth" Description="God I'm cold. Oi, do something useful and go and get me 2 logs to throw on the fire. Just go craft yourself and axe then swing at a tree. It's not that hard. If you do it well, I might even throw a few rocks your way... It's your choice if you dodge 'em or not.">
 	<Get ID="1" Amount="2"/>
-	<Requires ID="1" Amount="2"/>
-	<Rewards ID="1" Amount="2"/>
-</Story0>
-<Random Title="Oh" Description=".............................">
+	<Requires ID="2" Amount="2"/>
+	<Rewards ID="4" Amount="2"/>
+</Story>
+<Story Story="true" Time="60" Title="Goblins" Description="HEY ARE YOU DOING YOUR GOD DAMN JOB! You're suppose to go and kill those damn goblins! Deal with it NOW!">
+</Story>
+<Random Title="Oh" Time="60" Description=".............................">
 	<Get ID="1" Amount="2"/>
 	<Requires ID="1" Amount="2"/>
 	<Rewards ID="1" Amount="2"/>

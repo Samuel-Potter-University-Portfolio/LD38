@@ -15,6 +15,8 @@ public class InteractableObject : MonoBehaviour {
 	private float PromptAnimation;
 	private Vector2 StartScale;
 
+	private float Cooldown;
+
 	void Start ()
 	{
 		StartScale = Prompt.transform.localScale;
@@ -22,6 +24,9 @@ public class InteractableObject : MonoBehaviour {
 	
 	void Update ()
 	{
+		if (Cooldown > 0.0f)
+			Cooldown -= Time.deltaTime;
+
 		//Prompt animation
 		if (PlayerInRange)
 		{
@@ -35,14 +40,12 @@ public class InteractableObject : MonoBehaviour {
 			Prompt.SetActive(false);
 
 		//Functionality
-		if (PlayerInRange && Input.GetKey(KeyCode.F))
+		if (PlayerInRange && Input.GetKey(KeyCode.F) && Cooldown <= 0.0f)
 		{
-			PlayerInRange = false;
-
 			if(OnInteraction != null)
 				OnInteraction.Invoke();
+			Cooldown = 1.0f;
         }
-
     }
 
 	void OnTriggerEnter2D(Collider2D collider)

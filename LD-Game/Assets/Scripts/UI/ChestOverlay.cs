@@ -63,8 +63,32 @@ public class ChestOverlay : MonoBehaviour {
 					Count[slot.ID] = 1;
 			}
 		}
+	}
 
-		QuestController.Main.OnInventoryChange(Count);
+	public bool GivePlayerItem(ItemID ID)
+	{
+		foreach (ItemSlot slot in PlayerInput.Main.mPerson.HotBar)
+		{
+			if (slot.ID == ItemID.None)
+			{
+				slot.SetID(ID);
+				CountInventory();
+				return true;
+			}
+		}
+
+		foreach (ItemSlot slot in Slots)
+		{
+			if (slot.ID == ItemID.None)
+			{
+				slot.SetID(ID);
+				CountInventory();
+				return true;
+			}
+		}
+
+		CountInventory();
+		return false;
 	}
 
 	public bool GiveItem(ItemID ID)
