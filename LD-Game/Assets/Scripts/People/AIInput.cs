@@ -84,15 +84,18 @@ public class AIInput : MonoBehaviour
 			mPerson.Equip(PreferredWeapon);
 
 
+		VillageDoor village = VillageDoor.Main;
 		PlayerInput player = PlayerInput.Main;
 
-		if (player == null)
+		if (village == null || player == null)
 			return;
 
+		
+		Vector2 villageDif = village.transform.position - transform.position;
 		Vector2 playerDif = player.transform.position - transform.position;
 
 		//Attack player
-		if (playerDif.sqrMagnitude <= AttackPlayerRange * AttackPlayerRange)
+		if (playerDif.sqrMagnitude <= AttackPlayerRange * AttackPlayerRange || villageDif.sqrMagnitude <= AttackPlayerRange * AttackPlayerRange)
 		{
 			if (mPerson.CurrentlyEquiped != null && mPerson.CurrentlyEquiped.ID != ItemID.None)
 				mPerson.mAnimator.Swing(ItemController.Library[mPerson.CurrentlyEquiped.ID].SwingTime, OnFinishSwing);

@@ -29,6 +29,9 @@ public class Person : MonoBehaviour
 	private float DeadCoolDown = 0.0f;
 	private float MaxHealth;
 	public float HealRate = 0.02f;
+
+
+	public float NormalizedHealth { get { return Mathf.Clamp(Health/ MaxHealth, 0.0f, 1.0f); } }
 	public WeaponSlot mWeaponSlot;
 
 	public ItemSlot[] HotBar;
@@ -41,6 +44,9 @@ public class Person : MonoBehaviour
 	{
 		PlayerInput playerInput = GetComponent<PlayerInput>();
 		IsPlayer = (playerInput != null);
+
+		if (Health <= 0.0f)
+			Health = 0.01f;
 		MaxHealth = Health;
 
 		Body = GetComponent<Rigidbody2D>();
@@ -59,6 +65,9 @@ public class Person : MonoBehaviour
 
 		float damage = ItemController.Library.ContainsKey(what) ? ItemController.Library[what].Damage : 0.2f;
 
+		if (IsPlayer)
+			damage *= 0.5f;
+
 		Health -= damage;
 		if (Health <= 0)
 		{
@@ -66,7 +75,7 @@ public class Person : MonoBehaviour
 
 			//Revive player
 			if (IsPlayer)
-				DeadCoolDown = 15.0f;
+				DeadCoolDown = 5.0f;
 			else
 				Destroy(gameObject);
         }
@@ -75,9 +84,6 @@ public class Person : MonoBehaviour
 		Vector2 knockback = new Vector2(-Mathf.Sign(hitDirection.x) * 20.0f, 10.0f);
         Body.velocity += knockback;
 
-
-		if (IsPlayer)
-			Debug.Log("DMG " + damage + " HL " + Health + " HIT " + knockback);
 
 		return true;
     }
@@ -92,7 +98,7 @@ public class Person : MonoBehaviour
 			DeadCoolDown -= Time.deltaTime;
 
 			if (DeadCoolDown <= 0.0f)
-				Health = 50.0f;
+				Health = 0.4f;
 		}
 		else
 		{

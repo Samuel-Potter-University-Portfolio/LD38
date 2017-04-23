@@ -26,6 +26,18 @@ public class WeaponSlot : MonoBehaviour {
 				--i;
 			}
 		}
+
+		VillageDoor village = VillageDoor.Main;
+
+		if (village == null)
+			return;
+
+
+		Vector2 villageDif = village.transform.position - transform.position;
+		const float VillageRange = 2.0f;
+
+		if (villageDif.sqrMagnitude <= VillageRange * VillageRange)
+			village.Attack(item, who);
 	}
 
 	void OnTriggerEnter2D(Collider2D collider)
