@@ -22,7 +22,11 @@ public enum BlockID
 	GoblinDoor,
 	RedBrick,
 	RedBrickFloor,
-	Scaffold
+	Scaffold,
+	Bush,
+	Wheat,
+	Twigs,
+	Cloth
 }
 
 

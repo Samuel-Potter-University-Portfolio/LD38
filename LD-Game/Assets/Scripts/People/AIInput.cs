@@ -29,16 +29,19 @@ public class AIInput : MonoBehaviour
 	private Vector2 desiredInput;
 
 	private float tickTime;
-	public const float DeltaTime = 1.0f / 5.0f;
+	public const float DeltaTime = 1.0f / 10.0f;
 
+	public ItemID[] Inventory;
 
 	protected virtual void Start()
 	{
 		mPerson = GetComponent<Person>();
-		mPerson.Equip(PreferredWeapon);
-		mPerson.HotBar[0].SetID(ItemID.Pickaxe);
-		mPerson.HotBar[1].SetID(ItemID.Hammer);
-		mPerson.HotBar[2].SetID(ItemID.Sword);
+
+		for (int i = 0; i< Inventory.Length; ++i)
+			mPerson.HotBar[i].SetID(Inventory[i]);
+		
+		mPerson.HotBar[3].SetID(ItemID.Pickaxe);
+		mPerson.HotBar[4].SetID(ItemID.Hammer);
 		mPerson.Equip(PreferredWeapon);
 	}
 
@@ -67,13 +70,13 @@ public class AIInput : MonoBehaviour
 	{
 		if (IsDigging)
 		{
-			mPerson.Equip(0);
+			mPerson.Equip(3);
 			mPerson.mAnimator.Swing(ItemController.Library[mPerson.CurrentlyEquiped.ID].SwingTime, OnFinishDig);
 			return;
 		}
 		else if (CanNerdPool && StuckTime >= NerdPoolWait)
 		{
-			mPerson.Equip(1);
+			mPerson.Equip(4);
 			mPerson.mAnimator.Swing(ItemController.Library[mPerson.CurrentlyEquiped.ID].SwingTime, OnFinishBuild);
 			return;
 		}
@@ -87,9 +90,15 @@ public class AIInput : MonoBehaviour
 			return;
 
 		Vector2 playerDif = player.transform.position - transform.position;
-		
+
+		//Attack player
 		if (playerDif.sqrMagnitude <= AttackPlayerRange * AttackPlayerRange)
-			mPerson.mAnimator.Swing(ItemController.Library[mPerson.CurrentlyEquiped.ID].SwingTime, OnFinishSwing);
+		{
+			if (mPerson.CurrentlyEquiped != null && mPerson.CurrentlyEquiped.ID != ItemID.None)
+				mPerson.mAnimator.Swing(ItemController.Library[mPerson.CurrentlyEquiped.ID].SwingTime, OnFinishSwing);
+			else
+				mPerson.mAnimator.Swing(0.20f, OnFinishSwing);
+		}
     }
 
 	void OnFinishSwing()
@@ -111,7 +120,7 @@ public class AIInput : MonoBehaviour
 
 	void UpdateDesiredInput()
 	{
-		Vector2 Accuracy = new Vector2(0.5f, 0.1f);
+		Vector2 Accuracy = new Vector2(2.0f, 0.1f);
 		desiredInput = Vector2.zero;
 		VillageDoor village = VillageDoor.Main;
 		PlayerInput player = PlayerInput.Main;
@@ -132,12 +141,17 @@ public class AIInput : MonoBehaviour
 			difference = villageDif;
 
 
-		Vector2 input = new Vector2(Mathf.Abs(difference.x) >= Accuracy.x ? (int)Mathf.Sign(difference.x) : 0, Mathf.Abs(difference.y) >= Accuracy.y ? (int)Mathf.Sign(difference.y) : 0);
-		desiredInput = input;
+		//On spot
+		if (Mathf.Abs(difference.x) < Accuracy.x && Mathf.Abs(difference.y) < Accuracy.y)
+            return;
 
+
+		Vector2 input = new Vector2(Mathf.Abs(difference.x) >= Accuracy.x ? (int)Mathf.Sign(difference.x) * Mathf.Clamp(Mathf.Abs(difference.x), 0.0f, 1.0f) : 0, Mathf.Abs(difference.y) >= Accuracy.y ? (int)Mathf.Sign(difference.y) : 0);
+		desiredInput = input;
+		
 
 		//If in same position, check if stuck
-		if (transform.position.x >= lastLocation.x - Accuracy.x && transform.position.x <= lastLocation.x + Accuracy.x)
+		if (transform.position.x >= lastLocation.x - Accuracy.x * DeltaTime && transform.position.x <= lastLocation.x + Accuracy.x * DeltaTime)
 		{
 			StuckTime += DeltaTime;
 
@@ -153,7 +167,7 @@ public class AIInput : MonoBehaviour
 					desiredInput.y = 0;
 					if (StuckTime >= NerdPoolWait + NerdPoolBuildTime && mPerson.TouchingGround)
 					{
-						WorldController.Main.Place(BlockID.Scaffold, mPerson.WorldX, mPerson.WorldY);
+						WorldController.Main.Place(BlockID.Cloth, mPerson.WorldX, mPerson.WorldY);
 						StuckTime = 0.0f;
 					}
 				}
@@ -190,8 +204,8 @@ public class AIInput : MonoBehaviour
 			//Above
 			else
 			{
-				Block BottomBlock = WorldController.Main.GetBlock(mPerson.WorldX + (int)input.x, mPerson.WorldY + 1);
-				Block TopBlock = WorldController.Main.GetBlock(mPerson.WorldX + (int)input.x, mPerson.WorldY);
+				Block BottomBlock = WorldController.Main.GetBlock(mPerson.WorldX + Mathf.CeilToInt(input.x), mPerson.WorldY + 1);
+				Block TopBlock = WorldController.Main.GetBlock(mPerson.WorldX + Mathf.CeilToInt(input.x), mPerson.WorldY);
 
 				//Attemp to dig
 				if (CanDig && (BottomBlock != null || TopBlock != null) && StuckTime >= DigWait)

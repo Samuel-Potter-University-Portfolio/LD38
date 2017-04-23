@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 76f5ede57ceaf234187baed1ace6b629
-timeCreated: 1492954175
+timeCreated: 1492961120
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -12,6 +12,9 @@ TextureImporter:
     21300010: ItemSet_5
     21300012: ItemSet_6
     21300014: ItemSet_7
+    21300016: ItemSet_8
+    21300018: ItemSet_9
+    21300020: ItemSet_10
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -182,6 +185,45 @@ TextureImporter:
         serializedVersion: 2
         x: 56
         y: 56
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: ItemSet_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 48
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: ItemSet_9
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 48
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: ItemSet_10
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 48
         width: 8
         height: 8
       alignment: 0

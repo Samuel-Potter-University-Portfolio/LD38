@@ -34,23 +34,22 @@ public class PlayerInput : MonoBehaviour {
 		UpdateMovement();
 
 		//Place item
-		if (mPerson.TouchingGround && Input.GetKeyDown(KeyCode.E))
+		if (Input.GetKeyDown(KeyCode.E))
 		{
-			if (mPerson.CurrentlyEquiped != null && mPerson.CurrentlyEquiped.mMeta.PlacesBlock != BlockID.None && !WorldController.Main.HasBlock(mPerson.WorldX, mPerson.WorldY))
-			{
-				WorldController.Main.Place(mPerson.CurrentlyEquiped.mMeta.PlacesBlock, mPerson.WorldX, mPerson.WorldY);
+			int PlaceX = mPerson.WorldX;
+			int PlaceY = mPerson.TouchingGround ? mPerson.WorldY : (int)((transform.position.y - 1.0f) / WorldController.BLOCK_SIZE);
 
+			if (mPerson.CurrentlyEquiped != null && mPerson.CurrentlyEquiped.mMeta.PlacesBlock != BlockID.None && !WorldController.Main.HasBlock(PlaceX, PlaceY))
+			{
+				WorldController.Main.Place(mPerson.CurrentlyEquiped.mMeta.PlacesBlock, PlaceX, PlaceY);
 				mPerson.CurrentlyEquiped.SetID(ItemID.None);
 				mPerson.Equip(null);
 			}
         }
 
 		if (Input.GetMouseButton(0))
-			if (mPerson.CurrentlyEquiped != null && mPerson.CurrentlyEquiped.ID != ItemID.None)
-			{
-				if(mPerson.CurrentlyEquiped.mMeta.Tool)
-					mPerson.mAnimator.Swing(mPerson.CurrentlyEquiped.mMeta.SwingTime, OnFinishSwing);
-			}
+			if (mPerson.CurrentlyEquiped != null && mPerson.CurrentlyEquiped.ID != ItemID.None && mPerson.CurrentlyEquiped.mMeta.Tool)
+				mPerson.mAnimator.Swing(mPerson.CurrentlyEquiped.mMeta.SwingTime, OnFinishSwing);
 			else
 				mPerson.mAnimator.Swing(0.20f, OnFinishSwing);
 	}

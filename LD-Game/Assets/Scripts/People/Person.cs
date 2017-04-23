@@ -156,7 +156,7 @@ public class Person : MonoBehaviour
 		{
 			foreach (ItemSlot barSlot in HotBar)
 			{
-				if (barSlot != null && barSlot.ID != ItemID.None)
+				if (barSlot != null)
 					barSlot.UpdateColour(barSlot == CurrentlyEquiped);
 			}
 		}

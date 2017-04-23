@@ -6,7 +6,7 @@
 <Tree ID="4" ObjectID="0" Solid="false" Destructable="true" DroppedItem="2" DestroyTool="2"/>
 <Brick ID="5" TextureID="3" Solid="true" Destructable="true" Health="300" DestroyTool="1"/>
 <BrickFloor ID="6" TextureID="4" Solid="true" Destructable="true" FlipX="True" FlipY="False" Health="300" DestroyTool="1"/>
-<Post ID="7" TextureID="5" Solid="true" Destructable="true" FlipX="True" FlipY="False"/>
+<Post ID="7" TextureID="5" Solid="true" Destructable="true" FlipX="True" FlipY="False" Health="300"/>
 <Anivl ID="8" ObjectID="1" Solid="false" Destructable="false" FlipX="True" FlipY="False"/>
 <Chest ID="9" ObjectID="2" Solid="false" Destructable="false" FlipX="True" FlipY="False"/>
 <QuestBoard ID="10" ObjectID="3" Solid="false" Destructable="false" FlipX="True" FlipY="False"/>
@@ -14,5 +14,9 @@
 <GoblinDoor ID="12" ObjectID="5" Solid="false" Destructable="false" FlipX="True" FlipY="False"/>
 <RedBrick ID="13" TextureID="6" Solid="true" Destructable="true" Health="300"/>
 <RedBrickFloor ID="14" TextureID="7" Solid="true" Destructable="false"/>
-<Scaffold ID="15" TextureID="8" Solid="true" Destructable="true" Health="50"/>
+<Scaffold ID="15" TextureID="8" Solid="true" Destructable="true" Health="50" DroppedItem="10"/>
+<Bush ID="16" TextureID="9" Solid="false" Destructable="true" Health="10" DroppedItem="8"/>
+<Wheat ID="17" TextureID="10" Solid="false" Destructable="true" Health="10" DroppedItem="8"/>
+<Twigs ID="18" TextureID="11" Solid="false" Destructable="true" Health="10" DroppedItem="1"/>
+<Cloth ID="19" TextureID="12" Solid="true" Destructable="true" Health="75"/>
 </Blocks>

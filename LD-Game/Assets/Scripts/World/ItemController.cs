@@ -15,7 +15,10 @@ public enum ItemID
 	Rock,
 	Post,
 	Sword,
-	Hammer
+	Hammer,
+	Seed,
+	Axe,
+	Scaffold
 }
 
 public enum ToolID

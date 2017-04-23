@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Recipes>
-<Stick ID="1" Duration="2">
-	<Req ID="2" Amount="1"/>
-</Stick>
+<Axe ID="9" Duration="15">
+	<Req ID="1" Amount="2"/>
+</Axe>
 <Pickaxe ID="3" Duration="15">
 	<Req ID="1" Amount="2"/>
 	<Req ID="4" Amount="2"/>
@@ -11,5 +11,14 @@
 	<Req ID="1" Amount="2"/>
 	<Req ID="4" Amount="4"/>
 </Sword>
-<Post ID="5" Duration="5"/>
+<Stick ID="1" Duration="2">
+	<Req ID="2" Amount="1"/>
+</Stick>
+<Scaffold ID="10" Duration="5">
+	<Req ID="1" Amount="1"/>
+</Scaffold>
+<Post ID="5" Duration="5">
+	<Req ID="1" Amount="1"/>
+	<Req ID="4" Amount="3"/>
+</Post>
 </Recipes>

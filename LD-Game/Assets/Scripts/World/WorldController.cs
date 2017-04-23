@@ -113,8 +113,12 @@ public class WorldController : MonoBehaviour {
 			{
 				int x0 = fortX - fortRadius - 4 - 6 * i;
 				int x1 = fortX + fortRadius + 4 + 6 * i;
-				Place(BlockID.Tree, x0, FindHeight(x0));
+				Place(i % 2 == 0 ? BlockID.Bush : BlockID.Twigs, x0 + 1, FindHeight(x0));
+
+				Place(i % 2 == 0 ? BlockID.Bush : BlockID.Twigs, x1 - 1, FindHeight(x0));
+
 				Place(BlockID.Tree, x1, FindHeight(x1));
+				Place(BlockID.Tree, x0, FindHeight(x0));
 			}
 		}
 
@@ -135,6 +139,11 @@ public class WorldController : MonoBehaviour {
 
 	public bool Place(BlockID id, int x, int y, bool overwrite = false)
 	{
+		if (x < 0 || x > WORLD_WIDTH - 1)
+			return false;
+		if (y < 0 || y > WORLD_HEIGHT - 1)
+			return false;
+
 		if (!overwrite && !(Blocks[x, y] == null || Blocks[x, y].id == BlockID.None))
 			return false;
 
@@ -158,6 +167,11 @@ public class WorldController : MonoBehaviour {
 
 	public Block SpawnBlock(BlockID id, int x, int y)
 	{
+		if (x < 0 || x > WORLD_WIDTH - 1)
+			return null;
+		if (y < 0 || y > WORLD_HEIGHT - 1)
+			return null;
+
 		if (Blocks[x, y] != null)
 			RemoveBlock(x, y);
 
@@ -177,6 +191,11 @@ public class WorldController : MonoBehaviour {
 
 	public Background SpawnBackground(BlockID id, int x, int y)
 	{
+		if (x < 0 || x > WORLD_WIDTH - 1)
+			return null;
+		if (y < 0 || y > WORLD_HEIGHT - 1)
+			return null;
+
 		Background block = Instantiate(BackgroundBlock, transform);
 		block.gameObject.transform.localPosition = new Vector3(x * BLOCK_SIZE, y * BLOCK_SIZE, 0);
 
@@ -190,6 +209,11 @@ public class WorldController : MonoBehaviour {
 
 	public void RemoveBlock(int x, int y)
 	{
+		if (x < 0 || x > WORLD_WIDTH - 1)
+			return;
+		if (y < 0 || y > WORLD_HEIGHT - 1)
+			return;
+
 		if (Blocks[x, y] != null)
 			Destroy(Blocks[x, y].gameObject);
 		Blocks[x, y] = null;
@@ -197,11 +221,19 @@ public class WorldController : MonoBehaviour {
 
 	public bool HasBlock(int x, int y)
 	{
+		if (x < 0 || x > WORLD_WIDTH - 1)
+			return false;
+		if (y < 0 || y > WORLD_HEIGHT - 1)
+			return false;
 		return !(Blocks[x, y] == null || Blocks[x, y].id == BlockID.None);
 	}
 
 	public Block GetBlock(int x, int y)
 	{
+		if (x < 0 || x > WORLD_WIDTH - 1)
+			return null;
+		if (y < 0 || y > WORLD_HEIGHT - 1)
+			return null;
 		return Blocks[x, y] != null && Blocks[x, y].id == BlockID.None ? null : Blocks[x, y];
 	}
 
@@ -238,6 +270,9 @@ public class WorldController : MonoBehaviour {
 
 	public int FindHeight(int x)
 	{
+		if (x < 0 || x > WORLD_WIDTH - 1)
+			return 0;
+
 		bool foundBlock = false;
 
 		for (int y = 0; y < WORLD_HEIGHT; ++y)
