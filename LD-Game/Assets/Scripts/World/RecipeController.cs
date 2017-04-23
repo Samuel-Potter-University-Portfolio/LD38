@@ -37,7 +37,7 @@ public class RecipeController : MonoBehaviour
 			RecipeMeta meta = new RecipeMeta();
 
 			meta.Output = (ItemID)XML.GetUInt(node.Attributes["ID"]);
-			meta.Duration = (float)XML.GetInt(node.Attributes["Duration"]) / 60.0f;
+			meta.Duration = (float)XML.GetInt(node.Attributes["Duration"]);
 			meta.Requirements = new Dictionary<ItemID, uint>();
 
 			foreach (XmlNode req in node.ChildNodes)

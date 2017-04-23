@@ -20,6 +20,7 @@ public class PlayerInput : MonoBehaviour {
 	private ItemSlot CurrentlySelected;
 
 	public ChestOverlay mChestOverlay;
+	public CraftingOverlay mCraftingOverlay;
 
 	void Start ()
 	{

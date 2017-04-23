@@ -3,4 +3,8 @@
 <Stick ID="1" Duration="10">
 	<Req ID="2" Amount="2"/>
 </Stick>
+<Pickaxe ID="3" Duration="5">
+	<Req ID="1" Amount="1"/>
+	<Req ID="4" Amount="2"/>
+</Pickaxe>
 </Recipes>

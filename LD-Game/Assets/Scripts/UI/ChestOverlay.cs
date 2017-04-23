@@ -49,7 +49,7 @@ public class ChestOverlay : MonoBehaviour {
 				if (Count.ContainsKey(slot.ID))
 					Count[slot.ID]++;
 				else
-					Count[slot.ID] = 0;
+					Count[slot.ID] = 1;
 			}
 		}
 	}
@@ -68,5 +68,18 @@ public class ChestOverlay : MonoBehaviour {
 
 		CountInventory();
         return false;
+	}
+
+	public void Consume(ItemID ID, int Count = 1)
+	{
+		foreach (ItemSlot slot in Slots)
+		{
+			if (slot.ID == ID)
+			{
+				slot.SetID(ItemID.None);
+				if (--Count <= 0)
+					return;
+			}
+		}
 	}
 }

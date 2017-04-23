@@ -30,6 +30,9 @@ public class ItemController : MonoBehaviour
 	public Sprite[] ItemSheet;
 	public static Dictionary<ItemID, ItemMeta> Library { get; private set; }
 
+	private ItemID CraftingItem;
+	private float CraftTime = 0;
+
 	void Start ()
 	{
 		Main = this;
@@ -57,5 +60,41 @@ public class ItemController : MonoBehaviour
 		}
 
 		Debug.Log("Loaded " + Library.Count + " item meta");
+	}
+
+	void Update()
+	{
+		if (CraftingItem != ItemID.None)
+		{
+			CraftTime -= Time.deltaTime;
+			if (CraftTime <= 0.0f)
+			{
+				bool given = PlayerInput.Main.mChestOverlay.GiveItem(CraftingItem);
+				Debug.Log("Finished Craft Craft Given:" + given);
+				CraftingItem = ItemID.None;
+			}
+        }
+	}
+
+	public bool Craft(RecipeMeta recipe)
+	{
+		PlayerInput.Main.mChestOverlay.CountInventory();
+
+		foreach (KeyValuePair<ItemID, uint> req in recipe.Requirements)
+		{
+			uint Count = PlayerInput.Main.mChestOverlay.Count.ContainsKey(req.Key) ? PlayerInput.Main.mChestOverlay.Count[req.Key] : 0;
+
+			if (Count < req.Value)
+				return false;
+        }
+
+		foreach (KeyValuePair<ItemID, uint> req in recipe.Requirements)
+			PlayerInput.Main.mChestOverlay.Consume(req.Key, (int)req.Value);
+
+		CraftTime = recipe.Duration;
+		CraftingItem = recipe.Output;
+
+		Debug.Log("Start Craft " + CraftingItem + " " + CraftTime);
+		return true;
 	}
 }
