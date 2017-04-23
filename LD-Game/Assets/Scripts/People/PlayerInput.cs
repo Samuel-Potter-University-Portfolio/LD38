@@ -17,6 +17,7 @@ public class PlayerInput : MonoBehaviour {
 
 	public ChestOverlay mChestOverlay;
 	public CraftingOverlay mCraftingOverlay;
+	public QuestOverlay mQuestOverlay;
 
 	void Start ()
 	{
