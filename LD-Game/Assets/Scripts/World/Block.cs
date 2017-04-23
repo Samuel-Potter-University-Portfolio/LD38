@@ -119,7 +119,6 @@ public class Destroyable
 
 public class Block : MonoBehaviour
 {
-	public static Block MouseOver { get; private set; }
 	public static Dictionary<BlockID, BlockMeta> Library { get; private set; }
 
 	protected BlockMeta mMeta;
@@ -159,7 +158,7 @@ public class Block : MonoBehaviour
 		if (mMeta.FlipY)
 			mSprite.flipY = Random.value >= 0.5f;
 		
-		GetComponent<Collider2D>().isTrigger = !mMeta.Solid;
+		GetComponent<Collider2D>().enabled = mMeta.Solid;
 	}
 
 	public static void LibInit(WorldController worldController)
@@ -217,20 +216,7 @@ public class Block : MonoBehaviour
 
 		return false;
 	}
-
-	void OnMouseEnter()
-	{
-		MouseIsOver = true;
-		MouseOver = this;
-    }
-
-	void OnMouseExit()
-	{
-		MouseIsOver = false;
-		if (MouseOver == this)
-			MouseOver = null;
-    }
-
+	
 	void OnHealthChange()
 	{
 		float Health = destroyable.NormalizedHealth;

@@ -63,10 +63,12 @@ public class Person : MonoBehaviour
 		if (IsPlayer == who.IsPlayer)
 			return false;
 
-		float damage = ItemController.Library.ContainsKey(what) ? ItemController.Library[what].Damage : 0.2f;
+		float damage = ItemController.Library.ContainsKey(what) ? ItemController.Library[what].Damage : 0.05f;
+
 
 		if (IsPlayer)
-			damage *= 0.1f;
+			damage *= 0.5f;
+
 
 		Health -= damage;
 		if (Health <= 0)

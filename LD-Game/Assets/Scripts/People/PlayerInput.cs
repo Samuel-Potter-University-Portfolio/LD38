@@ -9,7 +9,8 @@ public class PlayerInput : MonoBehaviour {
 
 	public static PlayerInput Main { get; private set; }
 	public Person mPerson { get; private set; }
-		
+
+	public GameObject PlacePrompt;
 	public float InteractRange = 6.0f;
 
 	public ChestOverlay mChestOverlay;
@@ -28,6 +29,13 @@ public class PlayerInput : MonoBehaviour {
 			return;
 
 		UpdateMovement();
+
+
+		if (mPerson.CurrentlyEquiped != null && mPerson.CurrentlyEquiped.mMeta.PlacesBlock != BlockID.None)
+			PlacePrompt.SetActive(true);
+		else
+			PlacePrompt.SetActive(false);
+
 
 		//Place item
 		if (Input.GetKeyDown(KeyCode.E))
@@ -54,8 +62,15 @@ public class PlayerInput : MonoBehaviour {
 	{
 		ItemID item = mPerson.CurrentlyEquiped != null ? mPerson.CurrentlyEquiped.ID : ItemID.None;
 
-		if (Block.MouseOver != null)
-			Block.MouseOver.AttemptHit(item);
+		Vector3 mouse = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+		int HitX = Mathf.RoundToInt(mouse.x / WorldController.BLOCK_SIZE);
+		int HitY = Mathf.RoundToInt(mouse.y / WorldController.BLOCK_SIZE);
+
+		Block block = WorldController.Main.GetBlock(HitX, HitY);
+
+		if (block != null)
+			block.AttemptHit(item);
 
 		mPerson.mWeaponSlot.Use(item, mPerson);
     }
