@@ -101,6 +101,10 @@ public class WorldController : MonoBehaviour {
 			}
 		}
 
+		SpawnGoblinDoor(2, (int)flatHeight);
+		SpawnGoblinDoor(WORLD_WIDTH - 4, (int)flatHeight);
+
+
 
 		//Init blocks
 		WorldInit = true;
@@ -177,7 +181,6 @@ public class WorldController : MonoBehaviour {
 		Debug.Log("Spawn Player (" + x + "," + y + ")[" + (isPlayer ? "Ply" : "Bot") + "]");
 
 		Person person = Instantiate(BasePerson);
-		person.IsPlayer = isPlayer;
 		person.transform.position = new Vector3(x * BLOCK_SIZE, y * BLOCK_SIZE);
 	}
 
@@ -213,7 +216,22 @@ public class WorldController : MonoBehaviour {
 		return WORLD_HEIGHT - 1;
 	}
 
-	void Update ()
+	void SpawnGoblinDoor(int x, int y)
+	{
+		Place(BlockID.GoblinDoor, x, y);
+
+		for (int i = 0; i < 4; ++i)
+			Place(BlockID.RedBrickFloor, x - 1 + i, y - 1);
+
+		for (int i = 0; i < 4; ++i)
+			for (int n = 0; n < 3; ++n)
+				SpawnBackground(BlockID.RedBrick, x - 1 + i, y + n);
+
+		for (int i = 0; i < 4; ++i)
+			SpawnBlock(BlockID.RedBrick, x - 1 + i, y + 3);
+	}
+
+void Update ()
 	{
 		
 	}

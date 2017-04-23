@@ -17,7 +17,6 @@ public class PlayerInput : MonoBehaviour {
 	private RectTransform[] ResourceBars;
 	
 	public float InteractRange = 6.0f;
-	private ItemSlot CurrentlySelected;
 
 	public ChestOverlay mChestOverlay;
 	public CraftingOverlay mCraftingOverlay;
@@ -40,12 +39,12 @@ public class PlayerInput : MonoBehaviour {
 		//Place item
 		if (mPerson.TouchingGround && Input.GetKeyDown(KeyCode.E))
 		{
-			if (CurrentlySelected != null && CurrentlySelected.mMeta.PlacesBlock != BlockID.None && !WorldController.Main.HasBlock(WorldX, WorldY))
+			if (mPerson.CurrentlyEquiped != null && mPerson.CurrentlyEquiped.mMeta.PlacesBlock != BlockID.None && !WorldController.Main.HasBlock(WorldX, WorldY))
 			{
-				WorldController.Main.Place(CurrentlySelected.mMeta.PlacesBlock, WorldX, WorldY);
+				WorldController.Main.Place(mPerson.CurrentlyEquiped.mMeta.PlacesBlock, WorldX, WorldY);
 
-				CurrentlySelected.SetID(ItemID.None);
-				HotbarSelected(null);
+				mPerson.CurrentlyEquiped.SetID(ItemID.None);
+				mPerson.Equip(null);
 			}
         }
     }
@@ -59,17 +58,5 @@ public class PlayerInput : MonoBehaviour {
 
 		if (Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
 			mPerson.AddInput(Vector2.up);
-
 	}
-
-	public void HotbarSelected(ItemSlot slot)
-	{
-		if(slot == null || slot.ID == ItemID.None)
-			CurrentlySelected = null;
-		else
-			CurrentlySelected = slot;
-
-		foreach (ItemSlot hotbarSlot in mPerson.HotBar)
-			hotbarSlot.UpdateColour(CurrentlySelected == null || CurrentlySelected.ID == ItemID.None ? false : hotbarSlot == CurrentlySelected);
-    }
 }

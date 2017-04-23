@@ -11,8 +11,7 @@ public class Person : MonoBehaviour
 	public float Decceleration = 20.0f;
 	public float MaxSpeed = 20.0f;
 	public float JumpAcceleration = 20.0f;
-
-	public bool IsPlayer = true;
+	public bool IsPlayer { get; private set; }
 
 	private Rigidbody2D Body;
 	private Vector2 InputVector = new Vector2();
@@ -28,27 +27,22 @@ public class Person : MonoBehaviour
 	public ResourceBar HealthBar;
 
 	public ItemSlot[] HotBar;
+	public ItemSlot CurrentlyEquiped;
 
 	void Start ()
 	{
-		Camera camera = GetComponentInChildren<Camera>();
-		camera.gameObject.SetActive(IsPlayer);
-
-		RectTransform canvas = GetComponentInChildren<RectTransform>();
-		canvas.gameObject.SetActive(IsPlayer);
-
 		PlayerInput playerInput = GetComponent<PlayerInput>();
-		playerInput.enabled = IsPlayer;
-
-		AIInput aiInput = GetComponent<AIInput>();
-		aiInput.enabled = !IsPlayer;
-
+		IsPlayer = (playerInput != null);
+		
 		Body = GetComponent<Rigidbody2D>();
 
-		HungerBar = new ResourceBar(0, 100, 0.3f);
-		ThirstBar = new ResourceBar(0, 100, 0.1f);
-		StaminaBar = new ResourceBar(0, 100, 0.04f);
-		HealthBar = new ResourceBar(0, 100, 0);
+		if (IsPlayer)
+		{
+			HungerBar = new ResourceBar(0, 100, 0.3f);
+			ThirstBar = new ResourceBar(0, 100, 0.1f);
+			StaminaBar = new ResourceBar(0, 100, 0.04f);
+			HealthBar = new ResourceBar(0, 100, 0);
+		}
 	}
 
 	public void AddInput(Vector2 input)
@@ -60,11 +54,14 @@ public class Person : MonoBehaviour
 	{
 		UpdateMovement();
 
-		float deltaTime = Time.deltaTime;
-		HungerBar.Update(deltaTime);
-		ThirstBar.Update(deltaTime);
-		StaminaBar.Update(deltaTime);
-		HealthBar.Update(deltaTime);
+		if (IsPlayer)
+		{
+			float deltaTime = Time.deltaTime;
+			HungerBar.Update(deltaTime);
+			ThirstBar.Update(deltaTime);
+			StaminaBar.Update(deltaTime);
+			HealthBar.Update(deltaTime);
+		}
 	}
 	
 	void UpdateMovement()
@@ -138,5 +135,45 @@ public class Person : MonoBehaviour
 		}
 		
 		return false;
+	}
+
+	public void Equip(ItemSlot slot)
+	{
+		if(slot == null || slot.ID == ItemID.None)
+			CurrentlyEquiped = null;
+		else
+			CurrentlyEquiped = slot;
+
+
+		//Update hotbar colours
+		if (IsPlayer)
+		{
+			foreach (ItemSlot barSlot in HotBar)
+			{
+				if (barSlot != null && barSlot.ID != ItemID.None)
+					barSlot.UpdateColour(barSlot == CurrentlyEquiped);
+			}
+		}
+	}
+
+	public void Equip(int index)
+	{
+		ItemSlot slot = HotBar[index];
+
+		if (slot == null || slot.ID == ItemID.None)
+			CurrentlyEquiped = null;
+		else
+			CurrentlyEquiped = slot;
+
+
+		//Update hotbar colours
+		if (IsPlayer)
+		{
+			foreach (ItemSlot barSlot in HotBar)
+			{
+				if (barSlot != null && barSlot.ID != ItemID.None)
+					barSlot.UpdateColour(barSlot == CurrentlyEquiped);
+			}
+		}
 	}
 }

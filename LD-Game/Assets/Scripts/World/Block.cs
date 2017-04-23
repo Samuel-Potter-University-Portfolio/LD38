@@ -18,7 +18,11 @@ public enum BlockID
 	Anvil,
 	Chest,
 	QuestBoard,
-    VillageDoor
+    VillageDoor,
+	GoblinDoor,
+	RedBrick,
+	RedBrickFloor,
+	Scaffold
 }
 
 

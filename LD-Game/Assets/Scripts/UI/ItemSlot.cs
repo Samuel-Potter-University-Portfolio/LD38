@@ -27,6 +27,9 @@ public class ItemSlot : MonoBehaviour {
 	{
 		this.ID = ID;
 
+		if (ItemImage == null || BackgroundImage == null)
+			return;
+
 		if (!ItemController.Library.ContainsKey(ID))
 		{
 			ItemImage.enabled = false;
@@ -65,9 +68,11 @@ public class ItemSlot : MonoBehaviour {
 					SetID(ItemID.None);
 			}
 		}
+
+		//Equip
 		else if (IsHotbar)
 		{ 
-			PlayerInput.Main.HotbarSelected(this);
+			PlayerInput.Main.mPerson.Equip(this);
         }
 	}
 
