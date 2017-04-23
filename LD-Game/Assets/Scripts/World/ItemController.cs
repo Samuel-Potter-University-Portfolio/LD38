@@ -32,6 +32,7 @@ public class ItemController : MonoBehaviour
 
 	private ItemID CraftingItem;
 	private float CraftTime = 0;
+	private float TotalCraftTime = 0;
 
 	void Start ()
 	{
@@ -67,12 +68,16 @@ public class ItemController : MonoBehaviour
 		if (CraftingItem != ItemID.None)
 		{
 			CraftTime -= Time.deltaTime;
+
 			if (CraftTime <= 0.0f)
 			{
 				bool given = PlayerInput.Main.mChestOverlay.GiveItem(CraftingItem);
 				Debug.Log("Finished Craft Craft Given:" + given);
 				CraftingItem = ItemID.None;
-			}
+				PlayerInput.Main.mCraftingOverlay.OnCraftComplete();
+            }
+			else
+				PlayerInput.Main.mCraftingOverlay.OnCraftUpdate(CraftTime, TotalCraftTime);
         }
 	}
 
@@ -92,7 +97,9 @@ public class ItemController : MonoBehaviour
 			PlayerInput.Main.mChestOverlay.Consume(req.Key, (int)req.Value);
 
 		CraftTime = recipe.Duration;
+		TotalCraftTime = CraftTime;
 		CraftingItem = recipe.Output;
+		PlayerInput.Main.mCraftingOverlay.OnBeginCraft(CraftingItem);
 
 		Debug.Log("Start Craft " + CraftingItem + " " + CraftTime);
 		return true;

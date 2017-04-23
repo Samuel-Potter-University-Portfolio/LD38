@@ -2,9 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+using UnityEngine.UI;
+
+
 public class CraftingOverlay : MonoBehaviour {
 
 	public static CraftingOverlay Main { get; private set; }
+
+	[SerializeField]
+	private Image CraftingImage;
+	[SerializeField]
+	private RawImage CraftingBackground;
+	[SerializeField]
+	private Text CraftingImageText;
 
 	private CraftingRecipe[] RecipeSlots;
 	
@@ -12,7 +23,10 @@ public class CraftingOverlay : MonoBehaviour {
 	{
 		Main = this;
 		gameObject.SetActive(false);
-    }
+
+		CraftingImageText.enabled = false;
+		CraftingImage.enabled = false;
+	}
 
 	public void Redraw()
 	{
@@ -55,4 +69,37 @@ public class CraftingOverlay : MonoBehaviour {
 		gameObject.SetActive(false);
 		PlayerInput.Main.enabled = true;
 	}
+
+	public void OnBeginCraft(ItemID Item)
+	{
+		int textureID = ItemController.Library[Item].TextureID;
+		CraftingImage.sprite = ItemController.Main.ItemSheet[textureID];
+		CraftingImage.enabled = true;
+		CraftingImageText.enabled = true;
+	}
+
+	public void OnCraftUpdate(float RemainingTime, float TotalTime)
+	{
+		float v = 1.0f - RemainingTime / TotalTime;
+
+		CraftingImageText.text = Mathf.RoundToInt(v * 100) + "%";
+
+		if (v < 0.5f)
+		{
+			float vn = v / 0.5f;
+			CraftingBackground.color = Color.red * (1.0f - vn) + Color.yellow * vn;
+		}
+		else
+		{
+			float vn = (v - 0.5f) / 0.5f;
+			CraftingBackground.color = Color.yellow * (1.0f - vn) + Color.green * vn;
+		}
+    }
+
+	public void OnCraftComplete()
+	{
+		CraftingImageText.enabled = false;
+        CraftingImage.enabled = false;
+		Redraw();
+    }
 }

@@ -11,7 +11,7 @@ public class CraftingRecipe : MonoBehaviour {
 	[SerializeField]
 	private Image ItemImage;
 	private CraftingRequirement[] Requirements;
-	private RecipeMeta mMeta;	
+	private RecipeMeta mMeta;
 	
 
 	public void Set(RecipeMeta recipe)
