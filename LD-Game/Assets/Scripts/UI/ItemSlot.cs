@@ -19,7 +19,9 @@ public class ItemSlot : MonoBehaviour {
 	void Start()
 	{
 		BackgroundImage = GetComponent<RawImage>();
-		DefaultColour = BackgroundImage.color;
+		if(BackgroundImage != null)
+			DefaultColour = BackgroundImage.color;
+
         SetID(ID);
 	}
 

@@ -226,9 +226,19 @@ public class WorldController : MonoBehaviour {
 
 	public int FindHeight(int x)
 	{
+		bool foundBlock = false;
+
 		for (int y = 0; y < WORLD_HEIGHT; ++y)
-			if (Blocks[x, y] == null || Blocks[x, y].id == BlockID.None)
+		{
+			if (!foundBlock && Blocks[x, y] != null && Blocks[x, y].id != BlockID.None)
+			{
+				foundBlock = true;
+				continue;
+            }
+
+			if (foundBlock && (Blocks[x, y] == null || Blocks[x, y].id == BlockID.None))
 				return y;
+		}
 
 		return WORLD_HEIGHT - 1;
 	}
