@@ -90,17 +90,26 @@ public class PersonAnimator : MonoBehaviour
 			this.Joints = Joints;
         }
 
-		public void Animate(float time, bool smooth)
+		public void Animate(float time, bool smooth, bool flip)
 		{
 			for (uint i = 0; i < Joints.Length; ++i)
 			{
 				if (Animation.ContainsKey(i))
 				{
+					Quaternion desiredState = Animation[i].Get(time);
+
+					if (flip)
+					{
+						Vector3 eular = desiredState.eulerAngles;
+                        desiredState = Quaternion.Euler(eular.x, eular.y, -eular.z);
+					}
+
 					if (smooth)
-						Joints[i].transform.rotation = Quaternion.Slerp(Joints[i].transform.rotation, Animation[i].Get(time), 0.1f);
+						Joints[i].transform.rotation = Quaternion.Slerp(Joints[i].transform.rotation, desiredState, 0.1f);
 					else
-						Joints[i].transform.rotation = Animation[i].Get(time);
-				}
+						Joints[i].transform.rotation = desiredState;
+					
+                }
 			}
 		}
 	}
@@ -109,6 +118,12 @@ public class PersonAnimator : MonoBehaviour
 	private FullAnim IdleAnim;
 	private FullAnim WalkingAnim;
 	private FullAnim AirAnim;
+	private FullAnim SwingAnim;
+
+	public delegate void FinishedSwing();
+	private float SwingTimer;
+	private float SwingTotalTime;
+	private FinishedSwing OnFinishSwing;
 
 
 	void Start ()
@@ -128,7 +143,8 @@ public class PersonAnimator : MonoBehaviour
 		BuildIdleAnimation(Joints);
 		BuildWalkingAnimation(Joints);
 		BuildAirAnimation(Joints);
-    }
+		BuildSwingAnimation(Joints);
+	}
 
 	const uint CHAR_HEAD = 0;
 	const uint CHAR_TORSO = 1;
@@ -645,8 +661,48 @@ public class PersonAnimator : MonoBehaviour
 		}
 
 
-
 		AirAnim = new FullAnim(Animation, Joints);
+	}
+
+	void BuildSwingAnimation(SpriteRenderer[] Joints)
+	{
+		Dictionary<uint, Anim> Animation = new Dictionary<uint, Anim>();
+
+		//Swing
+		{
+			const uint index = CHAR_RIGHT_ARM;
+			List<Frame> frames = new List<Frame>();
+
+			{
+				Frame frame = new Frame();
+				frame.Duration = 0.6f;
+				frame.Rotation = Quaternion.AngleAxis(0.0f, Vector3.forward);
+				frames.Add(frame);
+			}
+			{
+				Frame frame = new Frame();
+				frame.Duration = 0.1f;
+				frame.Rotation = Quaternion.AngleAxis(90.0f, Vector3.forward);
+				frames.Add(frame);
+			}
+			{
+				Frame frame = new Frame();
+				frame.Duration = 0.3f;
+				frame.Rotation = Quaternion.AngleAxis(10.0f, Vector3.forward);
+				frames.Add(frame);
+			}
+			{
+				Frame frame = new Frame();
+				frame.Duration = 0.0f;
+				frame.Rotation = Quaternion.AngleAxis(0.0f, Vector3.forward);
+				frames.Add(frame);
+			}
+
+			Anim anim = new Anim(frames);
+			Animation[index] = anim;
+		}
+
+		SwingAnim = new FullAnim(Animation, Joints);
 	}
 
 	void Update ()
@@ -655,19 +711,34 @@ public class PersonAnimator : MonoBehaviour
 
 		const float movementThreshold = 1.0f;
 
+
 		//Moving
 		if (!mPerson.TouchingGround)
-			AirAnim.Animate(animTrack, true);
+			AirAnim.Animate(animTrack, true, transform.localScale.x != 1.0f);
 
         else if (Mathf.Abs(mBody.velocity.x) >= movementThreshold)
 		{
 			transform.localScale = new Vector2(Mathf.Sign(mBody.velocity.x), 1.0f);
-			WalkingAnim.Animate(animTrack, true);
+			WalkingAnim.Animate(animTrack, true, transform.localScale.x != 1.0f);
         }
 
 		//Idle
 		else
-			IdleAnim.Animate(animTrack, true);
+			IdleAnim.Animate(animTrack, true, transform.localScale.x != 1.0f);
+
+
+		if (SwingTotalTime != 0.0f)
+		{
+			SwingTimer += Time.deltaTime;
+			SwingAnim.Animate(Mathf.Clamp(SwingTimer / SwingTotalTime, 0.0f, 1.0f), false, transform.localScale.x != 1.0f);
+
+			if (SwingTimer >= SwingTotalTime)
+			{
+				SwingTotalTime = 0.0f;
+				OnFinishSwing();
+			}
+        }
+		
 
 		SetToolSprite();
     }
@@ -690,5 +761,17 @@ public class PersonAnimator : MonoBehaviour
 			else
 				mTool.enabled = false;
 		}
+	}
+	
+
+	public bool Swing(float time, FinishedSwing OnFinished)
+	{
+		if (SwingTotalTime != 0.0f)
+			return false;
+
+		SwingTotalTime = time;
+		SwingTimer = 0.0f;
+		OnFinishSwing = OnFinished;
+		return true;
 	}
 }

@@ -13,6 +13,7 @@ public class Person : MonoBehaviour
 	public float JumpAcceleration = 20.0f;
 	public bool IsPlayer { get; private set; }
 
+	public PersonAnimator mAnimator { get; private set; }
 	private Rigidbody2D Body;
 	private Vector2 InputVector = new Vector2();
 
@@ -35,6 +36,7 @@ public class Person : MonoBehaviour
 		IsPlayer = (playerInput != null);
 		
 		Body = GetComponent<Rigidbody2D>();
+		mAnimator = GetComponentInChildren<PersonAnimator>();
 
 		if (IsPlayer)
 		{

@@ -47,7 +47,17 @@ public class PlayerInput : MonoBehaviour {
 				mPerson.Equip(null);
 			}
         }
+
+		if (Input.GetKey(KeyCode.E))
+		{
+			mPerson.mAnimator.Swing(1.0f, OnFinishSwing);
+        }
     }
+
+	void OnFinishSwing()
+	{
+
+	}
 
 	void UpdateMovement()
 	{
