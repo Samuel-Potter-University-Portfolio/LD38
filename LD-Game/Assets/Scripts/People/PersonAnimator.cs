@@ -717,10 +717,7 @@ public class PersonAnimator : MonoBehaviour
 			AirAnim.Animate(animTrack, true, transform.localScale.x != 1.0f);
 
         else if (Mathf.Abs(mBody.velocity.x) >= movementThreshold)
-		{
-			transform.localScale = new Vector2(Mathf.Sign(mBody.velocity.x), 1.0f);
 			WalkingAnim.Animate(animTrack, true, transform.localScale.x != 1.0f);
-        }
 
 		//Idle
 		else

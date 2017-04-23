@@ -9,10 +9,7 @@ public class PlayerInput : MonoBehaviour {
 
 	public static PlayerInput Main { get; private set; }
 	public Person mPerson { get; private set; }
-	
-	[SerializeField]
-	private RectTransform[] ResourceBars;
-	
+		
 	public float InteractRange = 6.0f;
 
 	public ChestOverlay mChestOverlay;
@@ -23,15 +20,13 @@ public class PlayerInput : MonoBehaviour {
 	{
 		Main = this;
 		mPerson = GetComponent<Person>();
-
-		mPerson.HungerBar.SetAnimBar(ResourceBars[0]);
-		mPerson.ThirstBar.SetAnimBar(ResourceBars[1]);
-		mPerson.StaminaBar.SetAnimBar(ResourceBars[2]); 
-		mPerson.HealthBar.SetAnimBar(ResourceBars[3]);
 	}
 	
 	void Update ()
 	{
+		if (mPerson.IsDead)
+			return;
+
 		UpdateMovement();
 
 		//Place item
@@ -57,9 +52,13 @@ public class PlayerInput : MonoBehaviour {
 
 	void OnFinishSwing()
 	{
+		ItemID item = mPerson.CurrentlyEquiped != null ? mPerson.CurrentlyEquiped.ID : ItemID.None;
+
 		if (Block.MouseOver != null)
-			Block.MouseOver.AttemptHit(mPerson.CurrentlyEquiped != null ? mPerson.CurrentlyEquiped.ID : ItemID.None);
-	}
+			Block.MouseOver.AttemptHit(item);
+
+		mPerson.mWeaponSlot.Use(item, mPerson);
+    }
 
 	void UpdateMovement()
 	{

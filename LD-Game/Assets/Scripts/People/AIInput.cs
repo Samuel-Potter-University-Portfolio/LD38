@@ -103,6 +103,8 @@ public class AIInput : MonoBehaviour
 
 	void OnFinishSwing()
 	{
+		ItemID item = mPerson.CurrentlyEquiped != null ? mPerson.CurrentlyEquiped.ID : ItemID.None;
+        mPerson.mWeaponSlot.Use(item, mPerson);
 	}
 
 	void OnFinishBuild()
@@ -135,7 +137,7 @@ public class AIInput : MonoBehaviour
 		Vector2 playerDif = player.transform.position - transform.position;
 
 
-		if (playerDif.sqrMagnitude <= FocusPlayerRange * FocusPlayerRange)
+		if (!player.mPerson.IsDead && playerDif.sqrMagnitude <= FocusPlayerRange * FocusPlayerRange)
 			difference = playerDif;
 		else
 			difference = villageDif;

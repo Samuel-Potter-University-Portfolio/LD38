@@ -24,60 +24,97 @@ public class Person : MonoBehaviour
 	public int WorldX { get { return Mathf.RoundToInt(transform.position.x / WorldController.BLOCK_SIZE); } }
 	public int WorldY { get { return Mathf.RoundToInt(transform.position.y / WorldController.BLOCK_SIZE); } }
 
-	//Resourses
-	public ResourceBar HungerBar;
-	public ResourceBar ThirstBar;
-	public ResourceBar StaminaBar;
-	public ResourceBar HealthBar;
+
+	public float Health = 1.0f;
+	private float DeadCoolDown = 0.0f;
+	private float MaxHealth;
+	public float HealRate = 0.02f;
+	public WeaponSlot mWeaponSlot;
 
 	public ItemSlot[] HotBar;
 	public ItemSlot CurrentlyEquiped;
+
+	public bool IsDead { get { return Health <= 0.0f; } }
 
 
 	void Start ()
 	{
 		PlayerInput playerInput = GetComponent<PlayerInput>();
 		IsPlayer = (playerInput != null);
-		
+		MaxHealth = Health;
+
 		Body = GetComponent<Rigidbody2D>();
 		mAnimator = GetComponentInChildren<PersonAnimator>();
-
-		if (IsPlayer)
-		{
-			HungerBar = new ResourceBar(0, 100, 0.3f);
-			ThirstBar = new ResourceBar(0, 100, 0.1f);
-			StaminaBar = new ResourceBar(0, 100, 0.04f);
-			HealthBar = new ResourceBar(0, 100, 0);
-		}
-	}
+    }
 
 	public void AddInput(Vector2 input)
 	{
 		InputVector += input;
     }
 
+	public bool Attack(ItemID what, Person who)
+	{
+		if (IsPlayer == who.IsPlayer)
+			return false;
+
+		float damage = ItemController.Library.ContainsKey(what) ? ItemController.Library[what].Damage : 0.2f;
+
+		Health -= damage;
+		if (Health <= 0)
+		{
+			Health = 0;
+
+			//Revive player
+			if (IsPlayer)
+				DeadCoolDown = 15.0f;
+			else
+				Destroy(gameObject);
+        }
+
+		Vector2 hitDirection = who.transform.position - transform.position;
+		Vector2 knockback = new Vector2(-Mathf.Sign(hitDirection.x) * 20.0f, 10.0f);
+        Body.velocity += knockback;
+
+
+		if (IsPlayer)
+			Debug.Log("DMG " + damage + " HL " + Health + " HIT " + knockback);
+
+		return true;
+    }
+
 	void Update()
 	{
 		UpdateMovement();
 
-		if (IsPlayer)
+		//Dead player, so revive
+		if (IsPlayer && IsDead)
 		{
-			float deltaTime = Time.deltaTime;
-			HungerBar.Update(deltaTime);
-			ThirstBar.Update(deltaTime);
-			StaminaBar.Update(deltaTime);
-			HealthBar.Update(deltaTime);
+			DeadCoolDown -= Time.deltaTime;
+
+			if (DeadCoolDown <= 0.0f)
+				Health = 50.0f;
+		}
+		else
+		{
+			Health += HealRate * Time.deltaTime;
+			Health = Mathf.Clamp(Health, 0.0f, MaxHealth);
 		}
 	}
 	
 	void UpdateMovement()
 	{
+		if (IsDead)
+			InputVector = Vector2.zero;
+
+		if (InputVector.x != 0.0f)
+			mAnimator.transform.localScale = new Vector2(Mathf.Sign(InputVector.x), 1.0f);
+
 		//Handle new input
 		if (InputVector.sqrMagnitude > 0.01f)
 		{
 			Vector2 movement = InputVector * Acceleration * Time.deltaTime;
 			InputVector = Vector2.zero;
-
+			
 			if (movement.y > 0 && TouchingGround && !InJump)
 			{
 				movement.y = JumpAcceleration;
