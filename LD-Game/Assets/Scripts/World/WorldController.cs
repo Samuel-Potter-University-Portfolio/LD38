@@ -133,10 +133,16 @@ public class WorldController : MonoBehaviour {
 	}
 	
 
-	public void Place(BlockID id, int x, int y)
+	public bool Place(BlockID id, int x, int y, bool overwrite = false)
 	{
+		if (!overwrite && !(Blocks[x, y] == null || Blocks[x, y].id == BlockID.None))
+			return false;
+
 		if (!Block.Library[id].IsRefBlock)
+		{
 			SpawnBlock(id, x, y);
+			return true;
+		}
 		else
 		{
 			foreach (ReferenceObject obj in ObjectSheet)
@@ -144,10 +150,11 @@ public class WorldController : MonoBehaviour {
 				{
 					ReferenceObject NewObject = Instantiate(obj, transform);
 					NewObject.PlaceInWorld(x, y);
-					return;
+					return true;
 				}
+			return false;
 		}
-    }
+	}
 
 	public Block SpawnBlock(BlockID id, int x, int y)
 	{
@@ -257,9 +264,5 @@ public class WorldController : MonoBehaviour {
 		for (int i = 0; i < 4; ++i)
 			SpawnBlock(BlockID.RedBrick, x - 1 + i, y + 3);
 	}
-
-void Update ()
-	{
-		
-	}
+	
 }

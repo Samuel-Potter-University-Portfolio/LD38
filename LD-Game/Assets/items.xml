@@ -6,4 +6,5 @@
 <Rock ID="4" TextureID="3" Tool="False"/>
 <Post ID="5" TextureID="5" Tool="False" PlacesBlock="7"/>
 <Sword ID="6" TextureID="6" Tool="True" ToolType="3" SwingTime="500" Damage="100"/>
+<Sword ID="7" TextureID="7" Tool="True" ToolType="0" SwingTime="200" Damage="0"/>
 </Items>

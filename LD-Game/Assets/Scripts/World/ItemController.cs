@@ -14,7 +14,8 @@ public enum ItemID
 	Pickaxe,
 	Rock,
 	Post,
-	Sword
+	Sword,
+	Hammer
 }
 
 public enum ToolID

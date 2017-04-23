@@ -9,10 +9,7 @@ public class PlayerInput : MonoBehaviour {
 
 	public static PlayerInput Main { get; private set; }
 	public Person mPerson { get; private set; }
-
-	public int WorldX { get { return Mathf.RoundToInt(transform.position.x / WorldController.BLOCK_SIZE); } }
-	public int WorldY { get { return Mathf.RoundToInt(transform.position.y / WorldController.BLOCK_SIZE); } }
-
+	
 	[SerializeField]
 	private RectTransform[] ResourceBars;
 	
@@ -39,9 +36,9 @@ public class PlayerInput : MonoBehaviour {
 		//Place item
 		if (mPerson.TouchingGround && Input.GetKeyDown(KeyCode.E))
 		{
-			if (mPerson.CurrentlyEquiped != null && mPerson.CurrentlyEquiped.mMeta.PlacesBlock != BlockID.None && !WorldController.Main.HasBlock(WorldX, WorldY))
+			if (mPerson.CurrentlyEquiped != null && mPerson.CurrentlyEquiped.mMeta.PlacesBlock != BlockID.None && !WorldController.Main.HasBlock(mPerson.WorldX, mPerson.WorldY))
 			{
-				WorldController.Main.Place(mPerson.CurrentlyEquiped.mMeta.PlacesBlock, WorldX, WorldY);
+				WorldController.Main.Place(mPerson.CurrentlyEquiped.mMeta.PlacesBlock, mPerson.WorldX, mPerson.WorldY);
 
 				mPerson.CurrentlyEquiped.SetID(ItemID.None);
 				mPerson.Equip(null);

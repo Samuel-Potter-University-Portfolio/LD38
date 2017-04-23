@@ -21,6 +21,9 @@ public class Person : MonoBehaviour
 	public bool TouchingGround { get; private set; }
 	public bool InJump { get; private set; }
 
+	public int WorldX { get { return Mathf.RoundToInt(transform.position.x / WorldController.BLOCK_SIZE); } }
+	public int WorldY { get { return Mathf.RoundToInt(transform.position.y / WorldController.BLOCK_SIZE); } }
+
 	//Resourses
 	public ResourceBar HungerBar;
 	public ResourceBar ThirstBar;

@@ -5,13 +5,19 @@ using UnityEngine;
 public class AIInput : MonoBehaviour
 {
 	public Person mPerson { get; private set; }
-	public uint PreferredWeapon { get; private set; }
+	public int PreferredWeapon;
 
 
-	//[SerializeField]
+	[SerializeField]
 	protected float FocusPlayerRange = 15.0f;
-	//[SerializeField]
+	[SerializeField]
 	protected float AttackPlayerRange = 4.0f;
+
+	private float StuckTime;
+	protected const float NerdPoolWait = 2.0f;
+	[SerializeField]
+	protected float NerdPoolBuildTime = 2.0f;
+	public bool CanNerdPool = true;
 
 
 	private Vector2 lastLocation;
@@ -24,7 +30,8 @@ public class AIInput : MonoBehaviour
 	void Start()
 	{
 		mPerson = GetComponent<Person>();
-		mPerson.Equip(0);
+		mPerson.Equip(PreferredWeapon);
+		mPerson.HotBar[1].SetID(ItemID.Hammer);
 	}
 
 	void Update()
@@ -50,6 +57,17 @@ public class AIInput : MonoBehaviour
 
 	void UpdateAttack()
 	{
+		//Building Nerd poll
+		if (StuckTime >= NerdPoolWait)
+		{
+			mPerson.Equip(1);
+			mPerson.mAnimator.Swing(ItemController.Library[mPerson.CurrentlyEquiped.ID].SwingTime, OnFinishBuild);
+			return;
+		}
+		else
+			mPerson.Equip(PreferredWeapon);
+
+
 		PlayerInput player = PlayerInput.Main;
 
 		if (player == null)
@@ -57,14 +75,16 @@ public class AIInput : MonoBehaviour
 
 		Vector2 playerDif = player.transform.position - transform.position;
 		
-
 		if (playerDif.sqrMagnitude <= AttackPlayerRange * AttackPlayerRange)
 			mPerson.mAnimator.Swing(ItemController.Library[mPerson.CurrentlyEquiped.ID].SwingTime, OnFinishSwing);
     }
 
 	void OnFinishSwing()
 	{
-		Debug.Log("Done");
+	}
+
+	void OnFinishBuild()
+	{
 	}
 
 	void UpdateDesiredInput()
@@ -95,9 +115,30 @@ public class AIInput : MonoBehaviour
 			Vector2 input = new Vector2(Mathf.Sign(difference.x), difference.y >= Accuracy ? Mathf.Sign(difference.y) : 0);
 			desiredInput = input;
 
-			//Try jump, if cannot get there
+
+			//If in same position, check if stuck
 			if (transform.position.x >= lastLocation.x - Accuracy * DeltaTime && transform.position.x <= lastLocation.x + Accuracy * DeltaTime)
-				desiredInput.y = 1;
-		}
+			{
+				StuckTime += DeltaTime;
+
+				//Try jump, if cannot get there
+				if (StuckTime != 0.0f && StuckTime <= NerdPoolWait)
+					desiredInput.y = 1;
+
+				//Attempt to nerdpool
+				else
+				{
+					desiredInput.y = 0;
+					if (StuckTime >= NerdPoolWait + NerdPoolBuildTime && mPerson.TouchingGround)
+					{
+						WorldController.Main.Place(BlockID.Scaffold, mPerson.WorldX, mPerson.WorldY);
+						StuckTime = 0.0f;
+					}
+				}
+			}
+			else
+				StuckTime = 0.0f;
+			
+        }
 	}
 }
