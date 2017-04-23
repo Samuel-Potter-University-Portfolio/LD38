@@ -4,13 +4,12 @@ using UnityEngine;
 
 public class AIInput : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
+	public Person mPerson { get; private set; }
+
+	void Start()
+	{
+		mPerson = GetComponent<Person>();
+		mPerson.Equip(0);
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }
