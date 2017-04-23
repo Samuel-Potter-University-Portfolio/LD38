@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Blocks>
 <Dirt ID="1" TextureID="0" Solid="true" Destructable="true" FlipX="True" FlipY="True"/>
-<Stone ID="2" TextureID="1" Solid="true" Destructable="true" FlipX="True" FlipY="False"/>
+<Stone ID="2" TextureID="1" Solid="true" Destructable="true" FlipX="True" FlipY="False" DroppedItem="4" DestroyTool="1"/>
 <Grass ID="3" TextureID="2" Solid="true" Destructable="true" FlipX="True" FlipY="False"/>
-<Tree ID="4" ObjectID="0" Solid="false" Destructable="true" DroppedItem="2"/>
-<Brick ID="5" TextureID="3" Solid="true" Destructable="true" Health="300"/>
-<BrickFloor ID="6" TextureID="4" Solid="true" Destructable="true" FlipX="True" FlipY="False" Health="300"/>
+<Tree ID="4" ObjectID="0" Solid="false" Destructable="true" DroppedItem="2" DestroyTool="2"/>
+<Brick ID="5" TextureID="3" Solid="true" Destructable="true" Health="300" DestroyTool="1"/>
+<BrickFloor ID="6" TextureID="4" Solid="true" Destructable="true" FlipX="True" FlipY="False" Health="300" DestroyTool="1"/>
 <Post ID="7" TextureID="5" Solid="true" Destructable="true" FlipX="True" FlipY="False"/>
 <Anivl ID="8" ObjectID="1" Solid="false" Destructable="false" FlipX="True" FlipY="False"/>
 <Chest ID="9" ObjectID="2" Solid="false" Destructable="false" FlipX="True" FlipY="False"/>

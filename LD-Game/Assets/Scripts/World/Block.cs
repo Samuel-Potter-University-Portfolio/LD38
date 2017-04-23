@@ -40,7 +40,7 @@ public struct BlockMeta
 	public bool FlipX;
 	public bool FlipY;
 
-	public ItemID DestroyTool;
+	public ToolID DestroyTool;
 	public ItemID DroppedItem;
 }
 
@@ -105,7 +105,7 @@ public class Destroyable
 		OnHealthChange();
 
 
-		if (Health < 0.0f)
+		if (Health <= 0.0f)
 			OnKilled();
 		
 		return true;
@@ -181,7 +181,7 @@ public class Block : MonoBehaviour
 			meta.FlipX = XML.GetBool(node.Attributes["FlipX"]);
 			meta.FlipY = XML.GetBool(node.Attributes["FlipY"]);
 			
-            meta.DestroyTool = (ItemID)XML.GetUInt(node.Attributes["DestroyTool"]);
+            meta.DestroyTool = (ToolID)XML.GetUInt(node.Attributes["DestroyTool"]);
 			meta.DroppedItem = (ItemID)XML.GetUInt(node.Attributes["DroppedItem"]);
 			
 			Library[id] = meta;
@@ -196,8 +196,13 @@ public class Block : MonoBehaviour
 			destroyable.Update(Time.deltaTime);
     }
 
-	public bool AttemptHit(float damage, ItemID item, bool overrideItem = false)
+	public bool AttemptHit(ItemID item, bool overrideItem = false)
 	{
+		if (mMeta.DestroyTool != ToolID.None && (item == ItemID.None || ItemController.Library[item].ToolType != mMeta.DestroyTool))
+			return false;
+
+		float damage = item != ItemID.None ? ItemController.Library[item].Damage : 0.10f;
+
 		if (RefObject != null)
 		{
 			if (RefObject.destroyable != null)

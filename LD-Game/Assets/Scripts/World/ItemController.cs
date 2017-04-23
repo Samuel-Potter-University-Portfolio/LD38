@@ -13,14 +13,27 @@ public enum ItemID
 	Log,
 	Pickaxe,
 	Rock,
-	Post
+	Post,
+	Sword
+}
+
+public enum ToolID
+{
+	None = 0,
+	Pickaxe,
+	Axe,
+	Sword
 }
 
 public struct ItemMeta
 {
 	public int TextureID;
-	public bool Tool;
 	public BlockID PlacesBlock;
+
+	public bool Tool;
+	public ToolID ToolType;
+	public float SwingTime;
+	public float Damage;
 }
 
 public class ItemController : MonoBehaviour
@@ -54,8 +67,12 @@ public class ItemController : MonoBehaviour
 			ItemMeta meta = new ItemMeta();
 
 			meta.TextureID = XML.GetInt(node.Attributes["TextureID"], -1);
-			meta.Tool = XML.GetBool(node.Attributes["Tool"]);
 			meta.PlacesBlock = (BlockID)XML.GetUInt(node.Attributes["PlacesBlock"]);
+
+			meta.Tool = XML.GetBool(node.Attributes["Tool"]);
+			meta.ToolType = (ToolID)XML.GetUInt(node.Attributes["ToolType"]);
+			meta.SwingTime = (float)XML.GetInt(node.Attributes["SwingTime"]) / 1000.0f;
+			meta.Damage = (float)XML.GetInt(node.Attributes["Damage"], 45) /100.0f;
 
 			Library[id] = meta;
 		}

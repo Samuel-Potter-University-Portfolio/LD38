@@ -2,7 +2,8 @@
 <Items>
 <Stick ID="1" TextureID="0" Tool="False"/>
 <Log ID="2" TextureID="1" Tool="False"/>
-<Pickaxe ID="3" TextureID="2" Tool="True"/>
+<Pickaxe ID="3" TextureID="2" Tool="True" ToolType="1" SwingTime="700" Damage="50"/>
 <Rock ID="4" TextureID="3" Tool="False"/>
 <Post ID="5" TextureID="5" Tool="False" PlacesBlock="7"/>
+<Sword ID="6" TextureID="6" Tool="True" ToolType="3" SwingTime="500" Damage="100"/>
 </Items>

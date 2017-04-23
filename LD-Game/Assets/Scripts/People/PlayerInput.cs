@@ -48,14 +48,20 @@ public class PlayerInput : MonoBehaviour {
 			}
         }
 
-		if (Input.GetMouseButton(0) && (mPerson.CurrentlyEquiped != null && mPerson.CurrentlyEquiped.mMeta.Tool))
-			mPerson.mAnimator.Swing(0.7f, OnFinishSwing);
-    }
+		if (Input.GetMouseButton(0))
+			if (mPerson.CurrentlyEquiped != null && mPerson.CurrentlyEquiped.ID != ItemID.None)
+			{
+				if(mPerson.CurrentlyEquiped.mMeta.Tool)
+					mPerson.mAnimator.Swing(mPerson.CurrentlyEquiped.mMeta.SwingTime, OnFinishSwing);
+			}
+			else
+				mPerson.mAnimator.Swing(0.20f, OnFinishSwing);
+	}
 
 	void OnFinishSwing()
 	{
-		if (Block.MouseOver != null && mPerson.CurrentlyEquiped != null)
-			Block.MouseOver.AttemptHit(0.45f, mPerson.CurrentlyEquiped.ID);
+		if (Block.MouseOver != null)
+			Block.MouseOver.AttemptHit(mPerson.CurrentlyEquiped != null ? mPerson.CurrentlyEquiped.ID : ItemID.None);
 	}
 
 	void UpdateMovement()
