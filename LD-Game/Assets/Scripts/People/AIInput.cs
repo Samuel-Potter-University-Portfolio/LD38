@@ -5,7 +5,7 @@ using UnityEngine;
 public class AIInput : MonoBehaviour
 {
 	public Person mPerson { get; private set; }
-	public int PreferredWeapon;
+	public int PreferredWeapon = 2;
 
 
 	[SerializeField]
@@ -38,6 +38,7 @@ public class AIInput : MonoBehaviour
 		mPerson.Equip(PreferredWeapon);
 		mPerson.HotBar[0].SetID(ItemID.Pickaxe);
 		mPerson.HotBar[1].SetID(ItemID.Hammer);
+		mPerson.HotBar[2].SetID(ItemID.Sword);
 		mPerson.Equip(PreferredWeapon);
 	}
 
@@ -64,17 +65,16 @@ public class AIInput : MonoBehaviour
 
 	void UpdateAttack()
 	{
-		//Building Nerd poll
-		if (CanNerdPool && StuckTime >= NerdPoolWait)
+		if (IsDigging)
 		{
 			mPerson.Equip(0);
-			mPerson.mAnimator.Swing(ItemController.Library[mPerson.CurrentlyEquiped.ID].SwingTime, OnFinishBuild);
+			mPerson.mAnimator.Swing(ItemController.Library[mPerson.CurrentlyEquiped.ID].SwingTime, OnFinishDig);
 			return;
 		}
-		else if (IsDigging)
+		else if (CanNerdPool && StuckTime >= NerdPoolWait)
 		{
 			mPerson.Equip(1);
-			mPerson.mAnimator.Swing(ItemController.Library[mPerson.CurrentlyEquiped.ID].SwingTime, OnFinishDig);
+			mPerson.mAnimator.Swing(ItemController.Library[mPerson.CurrentlyEquiped.ID].SwingTime, OnFinishBuild);
 			return;
 		}
 		else
@@ -107,11 +107,11 @@ public class AIInput : MonoBehaviour
 
 		IsDigging = false;
 		StuckTime = 0.0f;
-    }
+	}
 
 	void UpdateDesiredInput()
 	{
-		const float Accuracy = 1.5f;
+		Vector2 Accuracy = new Vector2(0.5f, 0.1f);
 		desiredInput = Vector2.zero;
 		VillageDoor village = VillageDoor.Main;
 		PlayerInput player = PlayerInput.Main;
@@ -132,19 +132,20 @@ public class AIInput : MonoBehaviour
 			difference = villageDif;
 
 
-		if (difference.sqrMagnitude >= Accuracy * Accuracy)
+		Vector2 input = new Vector2(Mathf.Abs(difference.x) >= Accuracy.x ? (int)Mathf.Sign(difference.x) : 0, Mathf.Abs(difference.y) >= Accuracy.y ? (int)Mathf.Sign(difference.y) : 0);
+		desiredInput = input;
+
+
+		//If in same position, check if stuck
+		if (transform.position.x >= lastLocation.x - Accuracy.x && transform.position.x <= lastLocation.x + Accuracy.x)
 		{
-			Vector2 input = new Vector2(Mathf.Sign(difference.x), difference.y >= Accuracy ? Mathf.Sign(difference.y) : 0);
-			desiredInput = input;
+			StuckTime += DeltaTime;
 
 
-			//If in same position, check if stuck
-			if (transform.position.x >= lastLocation.x - Accuracy * DeltaTime && transform.position.x <= lastLocation.x + Accuracy * DeltaTime)
+			//Above
+			if (input.y > 0.0f)
 			{
-				StuckTime += DeltaTime;
-
 				Block BlockAboveHead = WorldController.Main.GetBlock(mPerson.WorldX, mPerson.WorldY + 2);
-				
 
 				//Attempt to nerdpool
 				if (CanNerdPool && BlockAboveHead == null && StuckTime >= NerdPoolWait)
@@ -162,15 +163,49 @@ public class AIInput : MonoBehaviour
 				{
 					IsDigging = true;
 					DigTarget = BlockAboveHead;
-                }
+				}
 
 				//Try jump, if cannot get there
 				else
 					desiredInput.y = 1;
 			}
+
+			//Below
+			else if (input.y < 0.0f)
+			{
+				Block BlockBellow = WorldController.Main.GetBlock(mPerson.WorldX, mPerson.WorldY - 1);
+
+				//Attemp to dig
+				if (CanDig && BlockBellow != null && StuckTime >= DigWait)
+				{
+					IsDigging = true;
+					DigTarget = BlockBellow;
+				}
+
+				//Try jump, if cannot get there
+				else if(StuckTime >= 0.5f)
+					desiredInput.y = 1;
+			}
+
+			//Above
 			else
-				StuckTime = 0.0f;
-			
-        }
+			{
+				Block BottomBlock = WorldController.Main.GetBlock(mPerson.WorldX + (int)input.x, mPerson.WorldY + 1);
+				Block TopBlock = WorldController.Main.GetBlock(mPerson.WorldX + (int)input.x, mPerson.WorldY);
+
+				//Attemp to dig
+				if (CanDig && (BottomBlock != null || TopBlock != null) && StuckTime >= DigWait)
+				{
+					IsDigging = true;
+					DigTarget = TopBlock == null ? BottomBlock : TopBlock;
+				}
+
+				//Try jump, if cannot get there
+				else if (StuckTime >= 0.5f)
+					desiredInput.y = 1;
+			}
+		}
+		else
+			StuckTime = 0.0f;
 	}
 }
