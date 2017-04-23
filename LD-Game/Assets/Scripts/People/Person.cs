@@ -30,6 +30,7 @@ public class Person : MonoBehaviour
 	public ItemSlot[] HotBar;
 	public ItemSlot CurrentlyEquiped;
 
+
 	void Start ()
 	{
 		PlayerInput playerInput = GetComponent<PlayerInput>();

@@ -85,6 +85,10 @@ public class Destroyable
 		else if (Health != MaxHealth)
 		{
 			Health += 0.25f * deltaTime;
+
+			if (Health >= MaxHealth)
+				Health = MaxHealth;
+
 			OnHealthChange();
 		}
     }
@@ -96,7 +100,7 @@ public class Destroyable
 
 		LastPerson = who;
 		HitCoolDown = 0.5f;
-		ResetTime = 1.0f;
+		ResetTime = 2.5f;
 		Health -= amount;
 		OnHealthChange();
 
@@ -111,6 +115,7 @@ public class Destroyable
 
 public class Block : MonoBehaviour
 {
+	public static Block MouseOver { get; private set; }
 	public static Dictionary<BlockID, BlockMeta> Library { get; private set; }
 
 	protected BlockMeta mMeta;
@@ -189,40 +194,41 @@ public class Block : MonoBehaviour
 	{
 		if (destroyable != null)
 			destroyable.Update(Time.deltaTime);
-
-		if (MouseIsOver)
-		{
-			const float damage = 0.34f;
-
-			//Destroy block
-			if (Input.GetMouseButton(0) && Vector2.Distance(transform.position, PlayerInput.Main.transform.position) < PlayerInput.Main.InteractRange)
-				if (RefObject != null)
-				{
-					if(RefObject.destroyable != null)
-						RefObject.destroyable.AttemptDamage(damage, PlayerInput.Main.mPerson);
-				}
-				else if (destroyable != null)
-					destroyable.AttemptDamage(damage, PlayerInput.Main.mPerson);
-		}
     }
+
+	public bool AttemptHit(float damage, ItemID item, bool overrideItem = false)
+	{
+		if (RefObject != null)
+		{
+			if (RefObject.destroyable != null)
+				return RefObject.destroyable.AttemptDamage(damage, PlayerInput.Main.mPerson);
+		}
+		else if (destroyable != null)
+			return destroyable.AttemptDamage(damage, PlayerInput.Main.mPerson);
+
+		return false;
+	}
 
 	void OnMouseEnter()
 	{
 		MouseIsOver = true;
+		MouseOver = this;
     }
 
 	void OnMouseExit()
 	{
 		MouseIsOver = false;
+		if (MouseOver == this)
+			MouseOver = null;
     }
 
 	void OnHealthChange()
 	{
 		float Health = destroyable.NormalizedHealth;
 
-		mSprite.color = Color.white * Health + Color.black * (1.0f - Health);
+		mSprite.color = Color.white * Health + Color.gray * (1.0f - Health);
 		//mSprite.transform.rotation = Quaternion.AngleAxis(90.0f * (1.0f - Health), Vector3.forward);
-		//mSprite.transform.localScale = Vector3.one * Health;
+		mSprite.transform.localScale = Vector3.one * Health + new Vector3(0.7f, 0.7f) * (1.0f - Health);
 	}
 
 	void OnKilled()

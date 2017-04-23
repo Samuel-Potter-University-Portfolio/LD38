@@ -48,15 +48,19 @@ public class PlayerInput : MonoBehaviour {
 			}
         }
 
-		if (Input.GetKey(KeyCode.E))
+		if (Input.GetMouseButton(0))
 		{
 			mPerson.mAnimator.Swing(1.0f, OnFinishSwing);
-        }
+		}
+
+		if (Input.GetKey(KeyCode.E))
+			mPerson.mAnimator.Swing(0.7f, OnFinishSwing);
     }
 
 	void OnFinishSwing()
 	{
-
+		if (Block.MouseOver != null && mPerson.CurrentlyEquiped != null)
+			Block.MouseOver.AttemptHit(0.45f, mPerson.CurrentlyEquiped.ID);
 	}
 
 	void UpdateMovement()
