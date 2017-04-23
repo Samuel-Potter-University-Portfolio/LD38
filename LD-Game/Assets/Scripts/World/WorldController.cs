@@ -41,15 +41,30 @@ public class WorldController : MonoBehaviour {
 
 		//Flat plain
 		{
-			for (int x = 0; x < WORLD_WIDTH; ++x)
-				for (int y = 0; y < flatHeight; ++y)
+			for (int y = 0; y < flatHeight; ++y)
+				for (int x = 0; x < WORLD_WIDTH/2 * Mathf.Clamp(y/(flatHeight-2), 0.0f, 1.0f); ++x)
 				{
 					if (y == flatHeight - 1)
-						SpawnBlock(BlockID.Grass, x, y);
+					{
+						SpawnBlock(BlockID.Grass, WORLD_WIDTH / 2 + x, y);
+						SpawnBackground(BlockID.Grass, WORLD_WIDTH / 2 + x, y);
+						SpawnBlock(BlockID.Grass, WORLD_WIDTH / 2 - x, y);
+						SpawnBackground(BlockID.Grass, WORLD_WIDTH / 2 - x, y);
+					}
 					else if (y >= flatHeight - 4)
-						SpawnBlock(BlockID.Dirt, x, y);
+					{
+						SpawnBlock(BlockID.Dirt, WORLD_WIDTH / 2 + x, y);
+						SpawnBackground(BlockID.Dirt, WORLD_WIDTH / 2 + x, y);
+						SpawnBlock(BlockID.Dirt, WORLD_WIDTH / 2 - x, y);
+						SpawnBackground(BlockID.Dirt, WORLD_WIDTH / 2 - x, y);
+					}
 					else
-						SpawnBlock(BlockID.Stone, x, y);
+					{
+						SpawnBlock(BlockID.Stone, WORLD_WIDTH / 2 + x, y);
+						SpawnBackground(BlockID.Stone, WORLD_WIDTH / 2 + x, y);
+						SpawnBlock(BlockID.Stone, WORLD_WIDTH / 2 - x, y);
+						SpawnBackground(BlockID.Stone, WORLD_WIDTH / 2 - x, y);
+					}
 				}
 		}
 
@@ -61,7 +76,7 @@ public class WorldController : MonoBehaviour {
 			const int fortRadius = 6;
 			const int fortHeight = 4;
 
-			for (int y = 0; y < fortHeight; ++y)
+			for (int y = 2; y < fortHeight; ++y)
 			{
 				SpawnBlock(BlockID.Brick, fortX - fortRadius, fortY + y);
 				SpawnBlock(BlockID.Brick, fortX + fortRadius, fortY + y);
@@ -83,6 +98,8 @@ public class WorldController : MonoBehaviour {
 			{
 				SpawnBlock(BlockID.BrickFloor, fortX - x, fortY - 1);
 				SpawnBlock(BlockID.BrickFloor, fortX + x, fortY - 1);
+				SpawnBlock(BlockID.Brick, fortX - x, fortY + fortHeight - 1);
+				SpawnBlock(BlockID.Brick, fortX + x, fortY + fortHeight - 1);
 			}
 
 			//Starting items

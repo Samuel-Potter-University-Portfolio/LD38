@@ -99,7 +99,7 @@ public class Destroyable
 			return false;
 
 		LastPerson = who;
-		HitCoolDown = 0.5f;
+		//HitCoolDown = 0.5f;
 		ResetTime = 2.5f;
 		Health -= amount;
 		OnHealthChange();

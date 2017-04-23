@@ -13,6 +13,6 @@
 <VillageDoor ID="11" ObjectID="4" Solid="false" Destructable="false" FlipX="True" FlipY="False"/>
 <GoblinDoor ID="12" ObjectID="5" Solid="false" Destructable="false" FlipX="True" FlipY="False"/>
 <RedBrick ID="13" TextureID="6" Solid="true" Destructable="true" Health="300"/>
-<RedBrickFloor ID="14" TextureID="7" Solid="true" Destructable="true" Health="300"/>
+<RedBrickFloor ID="14" TextureID="7" Solid="true" Destructable="false"/>
 <Scaffold ID="15" TextureID="8" Solid="true" Destructable="true" Health="50"/>
 </Blocks>

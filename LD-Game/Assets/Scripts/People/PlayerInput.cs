@@ -48,12 +48,7 @@ public class PlayerInput : MonoBehaviour {
 			}
         }
 
-		if (Input.GetMouseButton(0))
-		{
-			mPerson.mAnimator.Swing(1.0f, OnFinishSwing);
-		}
-
-		if (Input.GetKey(KeyCode.E))
+		if (Input.GetMouseButton(0) && (mPerson.CurrentlyEquiped != null && mPerson.CurrentlyEquiped.mMeta.Tool))
 			mPerson.mAnimator.Swing(0.7f, OnFinishSwing);
     }
 
