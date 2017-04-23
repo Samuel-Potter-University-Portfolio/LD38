@@ -28,8 +28,17 @@ public class QuestOverlay : MonoBehaviour
 
 	public void Open()
 	{
-		Title.text = "NO ACTIVE QUEST";
-		Description.text = "Stop reading the damn board and go kill those goblins already!";
+		if (!QuestController.Main.IsQuestActive)
+		{
+			Title.text = "NO ACTIVE QUEST";
+			Description.text = "Stop reading the damn board and go kill those goblins already!";
+		}
+		else
+		{
+			QuestMeta meta = QuestController.Main.CurrentQuest;
+            Title.text = meta.Title;
+			Description.text = meta.Description;
+		}
 
 		gameObject.SetActive(true);
 		PlayerInput.Main.enabled = false;

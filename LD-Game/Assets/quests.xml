@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Quests>
+<Story0 Story="true" Title="Welcome" Description="It's nice of you to offer to protect our village... What do you mean you didn't?... Well it's too late now. The other guards have already gone on holiday. Just don't mess it up; OK?">
+	<Get ID="1" Amount="2"/>
+	<Requires ID="1" Amount="2"/>
+	<Rewards ID="1" Amount="2"/>
+</Story0>
+<Random Title="Oh" Description=".............................">
+	<Get ID="1" Amount="2"/>
+	<Requires ID="1" Amount="2"/>
+	<Rewards ID="1" Amount="2"/>
+</Random>
+</Quests>

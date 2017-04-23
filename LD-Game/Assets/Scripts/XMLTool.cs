@@ -6,6 +6,14 @@ using System.Xml;
 
 public class XML
 {
+	public static string GetString(XmlAttribute attrib, string defaultValue = "")
+	{
+		if (attrib == null)
+			return defaultValue;
+		else
+			return attrib.Value;
+	}
+
 	public static int GetInt(XmlAttribute attrib, int defaultValue = 0)
 	{
 		if (attrib == null)
