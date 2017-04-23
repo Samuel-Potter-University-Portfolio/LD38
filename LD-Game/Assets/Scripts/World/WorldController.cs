@@ -197,7 +197,12 @@ public class WorldController : MonoBehaviour {
 
 	public bool HasBlock(int x, int y)
 	{
-		return !(Blocks[x,y] == null || Blocks[x,y].id == BlockID.None);
+		return !(Blocks[x, y] == null || Blocks[x, y].id == BlockID.None);
+	}
+
+	public Block GetBlock(int x, int y)
+	{
+		return Blocks[x, y] != null && Blocks[x, y].id == BlockID.None ? null : Blocks[x, y];
 	}
 
 	void SpawnPerson(bool isPlayer, int x, int y)

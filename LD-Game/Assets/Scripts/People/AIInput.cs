@@ -19,6 +19,11 @@ public class AIInput : MonoBehaviour
 	protected float NerdPoolBuildTime = 2.0f;
 	public bool CanNerdPool = true;
 
+	protected const float DigWait = 0.5f;
+	public bool CanDig = true;
+	protected bool IsDigging;
+	protected Block DigTarget;
+
 
 	private Vector2 lastLocation;
 	private Vector2 desiredInput;
@@ -27,11 +32,13 @@ public class AIInput : MonoBehaviour
 	public const float DeltaTime = 1.0f / 5.0f;
 
 
-	void Start()
+	protected virtual void Start()
 	{
 		mPerson = GetComponent<Person>();
 		mPerson.Equip(PreferredWeapon);
+		mPerson.HotBar[0].SetID(ItemID.Pickaxe);
 		mPerson.HotBar[1].SetID(ItemID.Hammer);
+		mPerson.Equip(PreferredWeapon);
 	}
 
 	void Update()
@@ -58,10 +65,16 @@ public class AIInput : MonoBehaviour
 	void UpdateAttack()
 	{
 		//Building Nerd poll
-		if (StuckTime >= NerdPoolWait)
+		if (CanNerdPool && StuckTime >= NerdPoolWait)
+		{
+			mPerson.Equip(0);
+			mPerson.mAnimator.Swing(ItemController.Library[mPerson.CurrentlyEquiped.ID].SwingTime, OnFinishBuild);
+			return;
+		}
+		else if (IsDigging)
 		{
 			mPerson.Equip(1);
-			mPerson.mAnimator.Swing(ItemController.Library[mPerson.CurrentlyEquiped.ID].SwingTime, OnFinishBuild);
+			mPerson.mAnimator.Swing(ItemController.Library[mPerson.CurrentlyEquiped.ID].SwingTime, OnFinishDig);
 			return;
 		}
 		else
@@ -86,6 +99,15 @@ public class AIInput : MonoBehaviour
 	void OnFinishBuild()
 	{
 	}
+
+	void OnFinishDig()
+	{
+		DigTarget.AttemptHit(ItemID.Pickaxe, true);
+		DigTarget = null;
+
+		IsDigging = false;
+		StuckTime = 0.0f;
+    }
 
 	void UpdateDesiredInput()
 	{
@@ -121,12 +143,11 @@ public class AIInput : MonoBehaviour
 			{
 				StuckTime += DeltaTime;
 
-				//Try jump, if cannot get there
-				if (StuckTime != 0.0f && StuckTime <= NerdPoolWait)
-					desiredInput.y = 1;
+				Block BlockAboveHead = WorldController.Main.GetBlock(mPerson.WorldX, mPerson.WorldY + 2);
+				
 
 				//Attempt to nerdpool
-				else
+				if (CanNerdPool && BlockAboveHead == null && StuckTime >= NerdPoolWait)
 				{
 					desiredInput.y = 0;
 					if (StuckTime >= NerdPoolWait + NerdPoolBuildTime && mPerson.TouchingGround)
@@ -135,6 +156,17 @@ public class AIInput : MonoBehaviour
 						StuckTime = 0.0f;
 					}
 				}
+
+				//Attemp to dig
+				else if (CanDig && BlockAboveHead != null && StuckTime >= DigWait)
+				{
+					IsDigging = true;
+					DigTarget = BlockAboveHead;
+                }
+
+				//Try jump, if cannot get there
+				else
+					desiredInput.y = 1;
 			}
 			else
 				StuckTime = 0.0f;
