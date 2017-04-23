@@ -132,6 +132,13 @@ public class QuestController : MonoBehaviour {
 		QuestTotalTime = CurrentQuest.Time;
 		QuestCoolDown = QuestTotalTime;
 		IsTimedQuest = QuestTotalTime != -1.0f;
+
+
+		if (QuestCount == 3)
+		{
+			Debug.Log("Goblin TIME");
+			GoblinDoor.Active = true;
+		}
     }
 
 	public bool HandInQuest()
