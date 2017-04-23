@@ -90,7 +90,7 @@ public class ItemController : MonoBehaviour
 	{
 		if (CraftingItem != ItemID.None)
 		{
-			CraftTime -= Time.deltaTime;
+			CraftTime -= Time.deltaTime * VillageDoor.Main.Productivity;
 
 			if (CraftTime <= 0.0f)
 			{

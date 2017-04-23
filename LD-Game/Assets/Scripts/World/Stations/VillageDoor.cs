@@ -6,14 +6,35 @@ public class VillageDoor : MonoBehaviour
 {
 	public static VillageDoor Main { get; private set; }
 
+	public float Productivity { get; private set; }
+	private float ProductivityDecay = 0.001f;
+
 	public float Health = 10.0f;
 	public float NormalizedHealth {	get { return Mathf.Clamp(Health/10.0f, 0.0f, 1.0f); } }
 
 
 	void Start ()
 	{
-		Main = this;	
-	}
+		Main = this;
+		Productivity = 1.0f;
+    }
+
+	void Update()
+	{
+		Productivity -= ProductivityDecay * Time.deltaTime;
+
+		if (Productivity <= 0.0f)
+		{
+			Productivity = 0.0f;
+			Health -= ProductivityDecay * Time.deltaTime;
+		}
+    }
+
+	public void OnCompleteQuest(QuestMeta meta)
+	{
+		Productivity += 0.2f;
+		Productivity = Mathf.Clamp(Productivity, 0.0f, NormalizedHealth);
+    }
 
 	public bool Attack(ItemID what, Person who)
 	{

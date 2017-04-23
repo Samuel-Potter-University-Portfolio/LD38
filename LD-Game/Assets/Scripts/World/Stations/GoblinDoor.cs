@@ -10,6 +10,8 @@ public class GoblinDoor : MonoBehaviour {
 	private AIInput[] BaseGoblins;
 
 	private float SpawnTimer;
+	private int Wave;
+
 
 	void Start ()
 	{
@@ -26,12 +28,13 @@ public class GoblinDoor : MonoBehaviour {
 		if (SpawnTimer <= 0.0f)
 		{
 			Spawn();
-			SpawnTimer = 15.0f;
+			SpawnTimer = 20.0f;
 		}
 	}
 
 	void Spawn()
 	{
-		Instantiate(BaseGoblins[0], transform.position, Quaternion.identity);
+        Instantiate(BaseGoblins[0], transform.position, Quaternion.identity);
+		++Wave;
 	}
 }

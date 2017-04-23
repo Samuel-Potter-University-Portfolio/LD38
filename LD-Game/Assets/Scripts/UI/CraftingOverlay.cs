@@ -16,6 +16,8 @@ public class CraftingOverlay : MonoBehaviour {
 	private RawImage CraftingBackground;
 	[SerializeField]
 	private Text CraftingImageText;
+	[SerializeField]
+	private Text ProductivityText;
 
 	private CraftingRecipe[] RecipeSlots;
 	
@@ -55,7 +57,9 @@ public class CraftingOverlay : MonoBehaviour {
 	{
 		if (Input.GetKey(KeyCode.Escape))
 			Close();
-	}
+
+		ProductivityText.text = Mathf.RoundToInt(VillageDoor.Main.Productivity * 100) + "% Productivity";
+    }
 
 	public void Open()
 	{

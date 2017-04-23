@@ -174,6 +174,7 @@ public class QuestController : MonoBehaviour {
 		QuestCoolDown = 15.0f;
 		IsQuestActive = false;
 
+		VillageDoor.Main.OnCompleteQuest(CurrentQuest);
 		return true;
 	}
 }
