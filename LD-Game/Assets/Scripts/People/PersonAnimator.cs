@@ -769,6 +769,9 @@ public class PersonAnimator : MonoBehaviour
 		if (SwingTotalTime != 0.0f)
 			return false;
 
+		if (time < 0.0f)
+			time = 0.01f;
+
 		SwingTotalTime = time;
 		SwingTimer = 0.0f;
 		OnFinishSwing = OnFinished;
