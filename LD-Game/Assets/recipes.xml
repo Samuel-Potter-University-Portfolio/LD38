@@ -7,4 +7,8 @@
 	<Req ID="1" Amount="1"/>
 	<Req ID="4" Amount="2"/>
 </Pickaxe>
+<Post ID="5" Duration="1">
+	<Req ID="2" Amount ="1"/>
+</Post>
+<Post ID="5" Duration="1"/>
 </Recipes>

@@ -83,6 +83,9 @@ public class ItemController : MonoBehaviour
 
 	public bool Craft(RecipeMeta recipe)
 	{
+		if (CraftingItem != ItemID.None)
+			return false;
+
 		PlayerInput.Main.mChestOverlay.CountInventory();
 
 		foreach (KeyValuePair<ItemID, uint> req in recipe.Requirements)
