@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 436e5e683305e604fba54ef8af5a2644
-timeCreated: 1492935426
+timeCreated: 1492990626
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -11,6 +11,7 @@ TextureImporter:
     21300008: ObjectSet_4
     21300010: ObjectSet_5
     21300012: ObjectSet_6
+    21300014: ObjectSet_7
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -170,6 +171,19 @@ TextureImporter:
         y: 104
         width: 16
         height: 24
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: ObjectSet_7
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 96
+        width: 8
+        height: 8
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}

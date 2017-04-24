@@ -19,9 +19,31 @@
 	<Get ID="5" Amount="10"/>
 </Story>
 
-<Random Title="Oh" Time="60" Description=".............................">
-	<Get ID="1" Amount="2"/>
-	<Requires ID="1" Amount="2"/>
-	<Rewards ID="1" Amount="2"/>
+<Random Title="Food" Time="60" Description="I'm throwing a surprise dinner for myself. I need you to go get some food. 4 wheat should do for now">
+	<Requires ID="12" Amount="4"/>
 </Random>
+<Random Title="Food" Time="60" Description="I'm throwing a surprise dinner for myself. I need you to go get some food. 2 wheat should do for now">
+	<Requires ID="12" Amount="2"/>
+</Random>
+<Random Title="Food" Time="60" Description="I'm throwing a surprise dinner for myself. I need you to go get some food. 1 wheat should do for now">
+	<Requires ID="12" Amount="1"/>
+</Random>
+
+<Random Title="Warmth" Time="60" Description="Oi, do something useful and go and get me 2 logs to throw on the fire. Just go craft yourself and axe then swing at a tree. It's not that hard">
+	<Requires ID="2" Amount="2"/>
+</Random>
+<Random Title="Warmth" Time="60" Description="Oi, do something useful and go and get me 1 log to throw on the fire. Just go craft yourself and axe then swing at a tree. It's not that hard">
+	<Requires ID="2" Amount="1"/>
+</Random>
+
+<Random Title="Stoner" Time="60" Description="I need some stones to throw at some little arse holes; a bit like you then? Get me 1">
+	<Requires ID="4" Amount="1"/>
+</Random>
+<Random Title="Stoner" Time="60" Description="I need some stones to throw at some little arse holes; a bit like you then? Get me 2">
+	<Requires ID="4" Amount="2"/>
+</Random>
+<Random Title="Stoner" Time="60" Description="I need some stones to throw at some little arse holes; a bit like you then? Get me 2">
+	<Requires ID="4" Amount="4"/>
+</Random>
+
 </Quests>

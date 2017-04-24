@@ -14,7 +14,7 @@ public class Person : MonoBehaviour
 	public bool IsPlayer { get; private set; }
 
 	public PersonAnimator mAnimator { get; private set; }
-	private Rigidbody2D Body;
+	public Rigidbody2D Body { get; private set; }
 	private Vector2 InputVector = new Vector2();
 
 	private List<Collider2D> floors = new List<Collider2D>();
@@ -60,14 +60,17 @@ public class Person : MonoBehaviour
 
 	public bool Attack(ItemID what, Person who)
 	{
-		if (IsPlayer == who.IsPlayer)
+		if (who != null && IsPlayer == who.IsPlayer)
+			return false;
+
+		if (IsDead)
 			return false;
 
 		float damage = ItemController.Library.ContainsKey(what) ? ItemController.Library[what].Damage : 0.05f;
 
 
 		if (IsPlayer)
-			damage *= 0.5f;
+			damage *= 0.2f;
 
 
 		Health -= damage;
@@ -77,18 +80,39 @@ public class Person : MonoBehaviour
 
 			//Revive player
 			if (IsPlayer)
-				DeadCoolDown = 5.0f;
+				DeadCoolDown = 3.0f;
 			else
 				Destroy(gameObject);
         }
 
-		Vector2 hitDirection = who.transform.position - transform.position;
-		Vector2 knockback = new Vector2(-Mathf.Sign(hitDirection.x) * 20.0f, 10.0f);
-        Body.velocity += knockback;
-
+		if (who != null)
+		{
+			Vector2 hitDirection = who.transform.position - transform.position;
+			Vector2 knockback = new Vector2(-Mathf.Sign(hitDirection.x) * 20.0f, 10.0f);
+			Body.velocity += knockback;
+		}
 
 		return true;
-    }
+	}
+
+	public bool Attack(float damage)
+	{ 
+		if (IsPlayer)
+			damage *= 0.2f;
+
+		Health -= damage;
+		if (Health <= 0)
+		{
+			Health = 0;
+
+			//Revive player
+			if (IsPlayer)
+				DeadCoolDown = 3.0f;
+			else
+				Destroy(gameObject);
+		}
+		return true;
+	}
 
 	void Update()
 	{

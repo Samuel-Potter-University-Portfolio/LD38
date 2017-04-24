@@ -29,7 +29,7 @@ public class AIInput : MonoBehaviour
 	private Vector2 desiredInput;
 
 	private float tickTime;
-	public const float DeltaTime = 1.0f / 10.0f;
+	public const float DeltaTime = 1.0f / 5.0f;
 
 	public ItemID[] Inventory;
 
@@ -48,8 +48,7 @@ public class AIInput : MonoBehaviour
 	void Update()
 	{
 		tickTime -= Time.deltaTime;
-
-		//Run update every 5th of a second
+		
 		if (tickTime <= 0)
 		{
 			RunUpdate();
@@ -125,7 +124,7 @@ public class AIInput : MonoBehaviour
 
 	void UpdateDesiredInput()
 	{
-		Vector2 Accuracy = new Vector2(2.0f, 0.1f);
+		Vector2 Accuracy = new Vector2(3.0f, 0.1f);
 		desiredInput = Vector2.zero;
 		VillageDoor village = VillageDoor.Main;
 		PlayerInput player = PlayerInput.Main;
@@ -153,7 +152,26 @@ public class AIInput : MonoBehaviour
 
 		Vector2 input = new Vector2(Mathf.Abs(difference.x) >= Accuracy.x ? (int)Mathf.Sign(difference.x) * Mathf.Clamp(Mathf.Abs(difference.x), 0.0f, 1.0f) : 0, Mathf.Abs(difference.y) >= Accuracy.y ? (int)Mathf.Sign(difference.y) : 0);
 		desiredInput = input;
-		
+
+
+		//Check if hole infront
+		if (mPerson.TouchingGround && CanNerdPool && input.x != 0)
+		{
+			int dif = Mathf.RoundToInt(Mathf.Sign(difference.x));
+
+			Block BlockBellow = WorldController.Main.GetBlock(mPerson.WorldX + dif, mPerson.WorldY - 1);
+			Block BlockBellowBellow = WorldController.Main.GetBlock(mPerson.WorldX + dif, mPerson.WorldY - 2);
+
+			if (BlockBellow == null && BlockBellowBellow == null)
+			{
+				WorldController.Main.Place(BlockID.Cloth, mPerson.WorldX + dif, mPerson.WorldY - 1);
+
+				mPerson.Equip(4);
+				mPerson.mAnimator.Swing(ItemController.Library[mPerson.CurrentlyEquiped.ID].SwingTime, OnFinishBuild);
+			}
+
+			input.x = 0;
+		}
 
 		//If in same position, check if stuck
 		if (transform.position.x >= lastLocation.x - Accuracy.x * DeltaTime && transform.position.x <= lastLocation.x + Accuracy.x * DeltaTime)
@@ -206,7 +224,7 @@ public class AIInput : MonoBehaviour
 					desiredInput.y = 1;
 			}
 
-			//Above
+			//Inline
 			else
 			{
 				Block BottomBlock = WorldController.Main.GetBlock(mPerson.WorldX + Mathf.CeilToInt(input.x), mPerson.WorldY + 1);
@@ -218,10 +236,6 @@ public class AIInput : MonoBehaviour
 					IsDigging = true;
 					DigTarget = TopBlock == null ? BottomBlock : TopBlock;
 				}
-
-				//Try jump, if cannot get there
-				else if (StuckTime >= 0.5f)
-					desiredInput.y = 1;
 			}
 		}
 		else

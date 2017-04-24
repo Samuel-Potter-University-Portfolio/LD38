@@ -20,7 +20,8 @@ public enum ItemID
 	Axe,
 	Scaffold,
 	Key,
-	Wheat
+	Wheat,
+	Spikes
 }
 
 public enum ToolID

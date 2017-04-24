@@ -34,7 +34,7 @@ public class WeaponSlot : MonoBehaviour {
 
 
 		Vector2 villageDif = village.transform.position - transform.position;
-		const float VillageRange = 2.0f;
+		const float VillageRange = 4.0f;
 
 		if (villageDif.sqrMagnitude <= VillageRange * VillageRange)
 			village.Attack(item, who);

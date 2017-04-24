@@ -21,4 +21,7 @@
 	<Req ID="1" Amount="1"/>
 	<Req ID="4" Amount="3"/>
 </Post>
+<Spike ID="13" Duration="7">
+	<Req ID="1" Amount="2"/>
+</Spike>
 </Recipes>

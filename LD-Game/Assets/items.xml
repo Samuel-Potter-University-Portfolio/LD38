@@ -5,11 +5,12 @@
 <Pickaxe ID="3" TextureID="2" Tool="True" ToolType="1" SwingTime="600" Damage="50"/>
 <Rock ID="4" TextureID="3" Tool="False"/>
 <Post ID="5" TextureID="5" Tool="False" PlacesBlock="7"/>
-<Sword ID="6" TextureID="6" Tool="True" ToolType="3" SwingTime="300" Damage="100"/>
+<Sword ID="6" TextureID="6" Tool="True" ToolType="3" SwingTime="300" Damage="70"/>
 <Hammer ID="7" TextureID="7" Tool="True" ToolType="0" SwingTime="800" Damage="10"/>
 <Seed ID="8" TextureID="8" Tool="False" PlacesBlock="17"/>
 <Axe ID="9" TextureID="9" Tool="True" ToolType="2" SwingTime="1000" Damage="40"/>
 <Scaffold ID="10" TextureID="10" Tool="False" PlacesBlock="15"/>
 <Key ID="11" TextureID="11" Tool="False"/>
 <Wheat ID="12" TextureID="12" Tool="False"/>
+<Spikes ID="13" TextureID="13" Tool="False" PlacesBlock="20" Damage="1"/>
 </Items>

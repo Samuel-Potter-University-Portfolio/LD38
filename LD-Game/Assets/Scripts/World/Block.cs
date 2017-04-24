@@ -26,7 +26,8 @@ public enum BlockID
 	Bush,
 	Wheat,
 	Twigs,
-	Cloth
+	Cloth,
+	Spikes
 }
 
 
