@@ -124,7 +124,7 @@ public class AIInput : MonoBehaviour
 
 	void UpdateDesiredInput()
 	{
-		Vector2 Accuracy = new Vector2(3.0f, 0.1f);
+		Vector2 Accuracy = new Vector2(3.0f, 1.0f);
 		desiredInput = Vector2.zero;
 		VillageDoor village = VillageDoor.Main;
 		PlayerInput player = PlayerInput.Main;

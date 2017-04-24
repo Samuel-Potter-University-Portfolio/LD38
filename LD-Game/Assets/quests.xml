@@ -15,8 +15,9 @@
 <Story Story="true" Time="30" Title="Goblins" Description="HEY ARE YOU DOING YOUR GOD DAMN JOB! You're suppose to go and kill those damn goblins! Deal with it NOW!">
 </Story>
 <Story Story="true" Title="Defence" Description="Stop sitting around on your arse and build some defences already! Use these to make it more difficult for the goblins to get in here.">
-	<Get ID="10" Amount="10"/>
-	<Get ID="5" Amount="10"/>
+	<Get ID="10" Amount="4"/>
+	<Get ID="5" Amount="4"/>
+	<Get ID="13" Amount="2"/>
 </Story>
 
 <Random Title="Food" Time="60" Description="I'm throwing a surprise dinner for myself. I need you to go get some food. 4 wheat should do for now">

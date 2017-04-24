@@ -43,13 +43,13 @@ public class GoblinDoor : MonoBehaviour {
 			Instantiate(BaseGoblins[3], transform.position, Quaternion.identity);
 
 		if (Wave == 0)
-			SpawnTimer = 100.0f;
-		else if (Wave == 1)
-			SpawnTimer = 80.0f;
-		else if (Wave == 2)
 			SpawnTimer = 60.0f;
-		else if (Wave == 4)
+		else if (Wave == 1)
 			SpawnTimer = 40.0f;
+		else if (Wave == 2)
+			SpawnTimer = 30.0f;
+		else if (Wave == 4)
+			SpawnTimer = 35.0f;
 		else
 			SpawnTimer = 20.0f;
 
